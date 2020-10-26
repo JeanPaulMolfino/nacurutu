@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\devtestController;
-
+use App\Http\Controllers\API;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,3 +19,5 @@ Route::get('/', function () {
 });
 
 Route::get('test', [devtestController::class, "index"]);
+Route::get('API/post', [API::class, "testrequest"]);
+Route::get('API/receivedata', [API::class, "index"]);
