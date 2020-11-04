@@ -19,5 +19,6 @@ Route::get('/', function () {
 });
 
 Route::get('test', [devtestController::class, "index"]);
-Route::get('API/post', [API::class, "testrequest"]);
-Route::get('API/receivedata', [API::class, "index"]);
+Route::get('post', [API::class, "testrequest"]);
+Route::get('writeJSON', [API::class, "writeJSON"]);
+Route::get('readJSON', [API::class, "readJSON"]);
