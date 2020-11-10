@@ -26,3 +26,8 @@ Route::get('test', [devtestController::class, "index"]);
 Route::get('post', [API::class, "testrequest"]);
 Route::get('writeJSON', [API::class, "writeJSON"]);
 Route::get('readJSON', [API::class, "readJSON"]);
+
+Route::get('chart1Data', [API::class, "chartData"]);
+Route::get('chart1Plot', function () {
+    return view('chart1Plot');
+});
