@@ -1,3 +1,32 @@
+## Guia de "Instalacion"
+	Basada en Windows 10
+
+### Guia de "Instalacion": ejecutables
+instalar xampp
+instalar composer
+	opcion añadir php al path (la ruta del php de xampp)
+
+### Guia de "Instalacion": cmd
+
+composer install
+composer update
+composer global require "laravel/installer"
+copy .env.example .env
+	crear la bd desde phpmyadmin y meterle el nombre en .env
+php artisan key:generate
+	sobre la carpeta principal del proyecto
+php artisan migrate
+	sobre la carpeta principal del proyecto
+
+### Guia de "Instalacion": paths rapidos para probar
+	http://127.0.0.1:8000
+	http://127.0.0.1:8000/readJSON
+	http://127.0.0.1:8000/writeJSON
+	http://127.0.0.1:8000/test
+	
+	test sin artisan levantado
+		http://127.0.0.1/SCADA/public/readJSON
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
@@ -59,3 +88,7 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+
