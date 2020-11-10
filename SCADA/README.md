@@ -20,12 +20,21 @@ php artisan migrate
 
 ### Guia de "Instalacion": paths rapidos para probar
 	http://127.0.0.1:8000
-	http://127.0.0.1:8000/readJSON
 	http://127.0.0.1:8000/writeJSON
+	http://127.0.0.1:8000/readJSON
 	http://127.0.0.1:8000/test
 	
 	test sin artisan levantado
 		http://127.0.0.1/SCADA/public/readJSON
+
+### Instalacion Vue.JS (run once)
+source: https://www.techiediaries.com/laravel/how-to-install-vuejs-in-laravel-6-7-by-example/
+- composer require laravel/ui
+- npm install 
+	npm audit fix (breakes somethig, skipped)
+- php artisan ui vue
+
+
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
