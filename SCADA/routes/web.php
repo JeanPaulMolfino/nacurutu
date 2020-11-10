@@ -18,6 +18,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('testvue', function () {
+    return view('testvue');
+});
+
 Route::get('test', [devtestController::class, "index"]);
 Route::get('post', [API::class, "testrequest"]);
 Route::get('writeJSON', [API::class, "writeJSON"]);
