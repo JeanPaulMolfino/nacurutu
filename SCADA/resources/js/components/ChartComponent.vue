@@ -53,6 +53,7 @@
 
 <script>
     //@yield('content')
+    /*
     import { Chartisan } from '@chartisan/chartjs'
     
     const chart = new Chartisan({
@@ -61,7 +62,7 @@
         // You can also pass the data manually instead of the url:
         // data: { ... }
     })
-    
+    */
     console.log('Component Chart mounted?.')
 
     export default {
