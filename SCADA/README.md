@@ -35,6 +35,28 @@ source: https://www.techiediaries.com/laravel/how-to-install-vuejs-in-laravel-6-
 - php artisan ui vue
 
 
+npm install vue bootstrap-vue bootstrap
+
+npm install vue-chartjs chart.js --save
+
+
+registraciones de componentes de Vue
+	https://michaelnthiessen.com/solve-unknown-custom-element-vue/
+docs vue + bootstrap
+	https://bootstrap-vue.org/docs
+guia vue + chart js (ya ni recuerdo si la llegue a usar)
+	https://vue-chartjs.org/guide/#chart-with-dynamic-styles
+guia vue + chart js (posta)
+	https://www.positronx.io/create-awesome-charts-in-vue-js-with-chart-js-and-vue-chartjs/
+
+
+Laravel + Chart.js: Live-Chart with Refresh Every Second
+	https://www.youtube.com/watch?v=dXeFrHo5HTM
+
+
+
+
+	
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
