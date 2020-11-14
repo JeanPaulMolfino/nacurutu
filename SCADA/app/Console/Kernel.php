@@ -24,7 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('get:devicedata') //Con esto elegimos que comando ejecutar
+        ->everyMinute() //Con esto la frecuencia
+        ->withoutOverlapping() //Con esto definimos de que si va a ejecutar, que evite ejecutarla si ya esta corriendo un llamado a esta funcion
+        ->runInBackground(); //Con esto definimos que si hay algun otro comando, que corra en paralelo. Dejando así que las otras tareas pendientes se hagan
     }
 
     /**
