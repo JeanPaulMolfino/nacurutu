@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\devtestController;
 use App\Http\Controllers\API;
+use App\Http\Controllers\DummyDeviceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,3 +32,10 @@ Route::get('chart1Data', [API::class, "chartData"]);
 Route::get('chart1Plot', function () {
     return view('chart1Plot');
 });
+
+Route::get('dummyDevice', [DummyDeviceController::class, "index"]);
+
+
+
+
+

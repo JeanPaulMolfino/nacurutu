@@ -18,6 +18,14 @@ php artisan key:generate
 php artisan migrate
 	sobre la carpeta principal del proyecto
 
+### Guia de "Instalacion": run
+
+	cd C:\xampp\htdocs\SCADA
+	php artisan serve
+
+	cd C:\xampp\htdocs\SCADA
+	npm run watch
+
 ### Guia de "Instalacion": paths rapidos para probar
 	http://127.0.0.1:8000
 	http://127.0.0.1:8000/writeJSON
