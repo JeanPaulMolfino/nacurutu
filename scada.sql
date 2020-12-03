@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-11-2020 a las 06:32:00
+-- Tiempo de generación: 03-12-2020 a las 03:42:29
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.4.10
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `scada`
 --
+CREATE DATABASE IF NOT EXISTS `scada` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `scada`;
 
 -- --------------------------------------------------------
 
@@ -27,6 +29,7 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `dispositivos`
 --
 
+DROP TABLE IF EXISTS `dispositivos`;
 CREATE TABLE `dispositivos` (
   `id` int(11) NOT NULL,
   `actividad` tinyint(1) NOT NULL,
@@ -45,6 +48,7 @@ CREATE TABLE `dispositivos` (
 -- Estructura de tabla para la tabla `logdispositivos`
 --
 
+DROP TABLE IF EXISTS `logdispositivos`;
 CREATE TABLE `logdispositivos` (
   `id` int(11) NOT NULL,
   `id_dispositivo` int(11) NOT NULL,
@@ -57,6 +61,7 @@ CREATE TABLE `logdispositivos` (
 -- Estructura de tabla para la tabla `medidas`
 --
 
+DROP TABLE IF EXISTS `medidas`;
 CREATE TABLE `medidas` (
   `id` int(11) NOT NULL,
   `tiempo` datetime NOT NULL,
@@ -68,9 +73,25 @@ CREATE TABLE `medidas` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `sensor`
+--
+
+DROP TABLE IF EXISTS `sensor`;
+CREATE TABLE `sensor` (
+  `id` int(11) NOT NULL,
+  `id_tipo` int(11) NOT NULL,
+  `id_sensor_secundario` int(11) NOT NULL,
+  `unidadmedida` varchar(8) NOT NULL,
+  `grafica` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tipos_dispositivos`
 --
 
+DROP TABLE IF EXISTS `tipos_dispositivos`;
 CREATE TABLE `tipos_dispositivos` (
   `id` int(11) NOT NULL,
   `updatetime` int(20) NOT NULL,
@@ -104,6 +125,13 @@ ALTER TABLE `medidas`
   ADD KEY `fk_medidas_dispositivos` (`id_dispositivo`);
 
 --
+-- Indices de la tabla `sensor`
+--
+ALTER TABLE `sensor`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_tipo` (`id_tipo`);
+
+--
 -- Indices de la tabla `tipos_dispositivos`
 --
 ALTER TABLE `tipos_dispositivos`
@@ -129,6 +157,12 @@ ALTER TABLE `logdispositivos`
 -- AUTO_INCREMENT de la tabla `medidas`
 --
 ALTER TABLE `medidas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `sensor`
+--
+ALTER TABLE `sensor`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -158,6 +192,12 @@ ALTER TABLE `logdispositivos`
 --
 ALTER TABLE `medidas`
   ADD CONSTRAINT `fk_medidas_dispositivos` FOREIGN KEY (`id_dispositivo`) REFERENCES `dispositivos` (`id`);
+
+--
+-- Filtros para la tabla `sensor`
+--
+ALTER TABLE `sensor`
+  ADD CONSTRAINT `sensor_ibfk_1` FOREIGN KEY (`id_tipo`) REFERENCES `tipos_dispositivos` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
