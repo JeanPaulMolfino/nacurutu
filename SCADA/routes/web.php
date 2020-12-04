@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\devtestController;
 use App\Http\Controllers\API;
 use App\Http\Controllers\DummyDeviceController;
+use App\Http\Controllers\endpoints;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,6 +35,9 @@ Route::get('chart1Plot', function () {
 });
 
 Route::get('dummyDevice', [DummyDeviceController::class, "index"]);
+
+Route::get('endpoints/get:dispositivos', [endpoints::class, "get_dispositivos"]);
+Route::get('endpoints/get:sensoresbydispositivo/{id}', [endpoints::class, "get_sensoresbydispositivo"]);
 
 
 
