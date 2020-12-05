@@ -46,9 +46,17 @@ class DummyDeviceController extends Controller
 			//$date = microtime();
 
 			//date(formato, segundosDesde1970)
+
 			//echo "Created date is " . date("Y-m-dd-h-i-sa", $date);
 			//echo "Created date is " . date("Y-m-dd-h-i-sa");
-			return date("Y-m-d-h-i-s");
+
+			$randSecond = "";
+			$randSecond = randCustom(0, 60, 1);
+			//return date("Y-m-d-h-i-s");
+			if(strlen($randSecond) <2){
+				$randSecond = "0".$randSecond;
+			}
+			return date("Y-m-d-h-i-").$randSecond ;
 		}
 
 		function generateMeteoLine(int $someKindOfIndex){
