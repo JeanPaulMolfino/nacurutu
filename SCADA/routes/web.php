@@ -38,6 +38,7 @@ Route::get('dummyDevice', [DummyDeviceController::class, "index"]);
 
 Route::get('endpoints/get:dispositivos', [endpoints::class, "get_dispositivos"]);
 Route::get('endpoints/get:sensoresbydispositivo/{id}', [endpoints::class, "get_sensoresbydispositivo"]);
+Route::get('endpoints/get:medidasbydispositivo/{iddispositivo}/{idsensor}/{finicio}/{ffin}', [endpoints::class, "get_medidasbydispositivo"]);
 
 
 

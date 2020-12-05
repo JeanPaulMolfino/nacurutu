@@ -14,6 +14,25 @@ class endpoints extends Controller
 
     public function get_sensoresbydispositivo($id)
     {
-        return json_encode(DB::select("Select s.* from dispositivos as d inner join tipos_dispositivos as td inner join sensores as s where td.id = d.id_tipo and td.id = s.id_tipo and d.id=".$id), JSON_UNESCAPED_UNICODE);
+        return json_encode(DB::select("Select s.* from dispositivos as d inner join tipos_dispositivos as td inner join sensores as s where td.id = d.id_tipo and td.id = s.id_tipo and d.identificador='".$id."'"), JSON_UNESCAPED_UNICODE);
+    }
+
+    public function get_medidasbydispositivo(Request $request, $iddispositivo, $idsensor, $finicio, $ffin){
+        if($finicio != 'null' && $ffin != 'null'){
+            $finicio[10] = ' ';
+            $ffin[10] = ' ';
+            return json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.tiempo >='".$finicio."' and m.tiempo <= '".$ffin."' and m.id_sensor=".$idsensor." and d.identificador='".$iddispositivo."'"), JSON_UNESCAPED_UNICODE);
+        }
+        else if($finicio != 'null' && $ffin === 'null'){
+            $finicio[10] = ' ';
+            return json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.tiempo >='".$finicio."' and m.id_sensor=".$idsensor." and d.identificador='".$iddispositivo."'"), JSON_UNESCAPED_UNICODE);
+        }
+        else if($finicio === 'null' && $ffin != 'null'){
+            $ffin[10] = ' ';
+            return json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.tiempo <='".$ffin."' and m.id_sensor=".$idsensor." and d.identificador='".$iddispositivo."'"), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.id_sensor=".$idsensor." and d.identificador='".$iddispositivo."'"), JSON_UNESCAPED_UNICODE);
+        }
+        //return json_decode(DB::select("Select "));
     }
 }
