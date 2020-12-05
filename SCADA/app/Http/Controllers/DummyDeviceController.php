@@ -51,12 +51,13 @@ class DummyDeviceController extends Controller
 			//echo "Created date is " . date("Y-m-dd-h-i-sa");
 
 			$randSecond = "";
-			$randSecond = randCustom(0, 60, 1);
+			$randSecond = randCustom(0, 59, 1);
 			//return date("Y-m-d-h-i-s");
 			if(strlen($randSecond) <2){
 				$randSecond = "0".$randSecond;
 			}
-			return date("Y-m-d-h-i-").$randSecond ;
+			//return date("Y-m-d-h-i-").$randSecond ;
+			return date("Y-m-d-h-i-");
 		}
 
 		function generateMeteoLine(int $someKindOfIndex){
@@ -81,6 +82,12 @@ class DummyDeviceController extends Controller
 	
 			$Dir_viento = randCustom(0, 360, 1);
 			$Ind_pluvio = randCustom(0, 1, 10000);
+
+			if(strlen($someKindOfIndex) <2){
+				$TIMESTAMP = $TIMESTAMP."0".$someKindOfIndex;
+			}else{
+				$TIMESTAMP = $TIMESTAMP.$someKindOfIndex;
+			}		
 
 			$return = $TIMESTAMP.$end.$T_amb.$end.$T_int.$end.$Humedad.$end.$Pres_atm.$end.$Irrad_solar.$end.$Irrad_UV.$end.$Vel_viento.$end.$Dir_viento.$end.$Ind_pluvio.$eol;
 		 	return $return;
