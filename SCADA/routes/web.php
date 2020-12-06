@@ -55,8 +55,8 @@ Route::put('dispositivos/put:update_dispositivo/{ubicacion}/{id_tipo}/{marca}/{m
 Route::put('dispositivos/put:baja_dispositivo/{identificador}', [ctrlDispositivos::class, "baja_dispositivo"]);
 Route::put('dispositivos/put:alta_dispositivo/{identificador}', [ctrlDispositivos::class, "alta_dispositivo"]);
 
-Route::get('tiposdispositivos/get:tiposdispositivos/', [ctrlDispositivos::class, "list_tiposdispositivos"]);
-Route::get('tiposdispositivos/get:get_tipodispositivobyid/{id}', [ctrlDispositivos::class, "get_tipodispositivobyid"]);
-Route::post('tiposdispositivos/post:insert_tipodispositivo/{updatetime}/{categoria}/{proposito}', [ctrlDispositivos::class, "insert_tipodispositivo"]);
-Route::put('tiposdispositivos/put:update_tipodispositivo/{id}/{updatetime}/{categoria}/{proposito}', [ctrlDispositivos::class, "update_tipodispositivo"]);
+Route::get('tiposdispositivos/get:tiposdispositivos/', [ctrlTiposDispositivos::class, "list_tiposdispositivos"]);
+Route::get('tiposdispositivos/get:get_tipodispositivobyid/{id}', [ctrlTiposDispositivos::class, "get_tipodispositivobyid"]);
+Route::post('tiposdispositivos/post:insert_tipodispositivo/{updatetime}/{categoria}/{proposito}', [ctrlTiposDispositivos::class, "insert_tipodispositivo"]);
+Route::put('tiposdispositivos/put:update_tipodispositivo/{id}/{updatetime}/{categoria}/{proposito}', [ctrlTiposDispositivos::class, "update_tipodispositivo"]);
 
