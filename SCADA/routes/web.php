@@ -1,10 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\devtestController;
 use App\Http\Controllers\API;
+use App\Http\Controllers\devtestController;
 use App\Http\Controllers\DummyDeviceController;
 use App\Http\Controllers\endpoints;
+use App\Http\Controllers\ctrlDispositivos;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,7 +16,7 @@ use App\Http\Controllers\endpoints;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,6 +47,6 @@ Route::get('endpoints/get:sensoresbydispositivo/{id}', [endpoints::class, "get_s
 Route::get('endpoints/get:medidasbydispositivo/{iddispositivo}/{idsensor}/{finicio}/{ffin}', [endpoints::class, "get_medidasbydispositivo"]);
 
 
-
-
-
+Route::post('dispositivos/post:insert_dispositivo/{ubicacion}/{fecha_alta}/{id_tipo}/{marca}/{modelo}/{identificador}', [ctrlDispositivos::class, "insert_dispositivo"]);
+Route::put('dispositivos/put:baja_dispositivo/{identificador}', [ctrlDispositivos::class, "baja_dispositivo"]);
+Route::put('dispositivos/put:alta_dispositivo/{identificador}', [ctrlDispositivos::class, "alta_dispositivo"]);
