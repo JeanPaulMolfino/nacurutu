@@ -38,16 +38,16 @@ class endpoints extends Controller
 
     public function get_medidasbydispositivo(Request $request, $iddispositivo, $idsensor, $finicio, $ffin){
         if($finicio != 'null' && $ffin != 'null'){
-            $finicio[10] = ' ';
-            $ffin[10] = ' ';
+            //$finicio[10] = ' ';
+            //$ffin[10] = ' ';
             return json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.tiempo >='".$finicio."' and m.tiempo <= '".$ffin."' and m.id_sensor=".$idsensor." and d.identificador='".$iddispositivo."'"), JSON_UNESCAPED_UNICODE);
         }
         else if($finicio != 'null' && $ffin === 'null'){
-            $finicio[10] = ' ';
+            //$finicio[10] = ' ';
             return json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.tiempo >='".$finicio."' and m.id_sensor=".$idsensor." and d.identificador='".$iddispositivo."'"), JSON_UNESCAPED_UNICODE);
         }
         else if($finicio === 'null' && $ffin != 'null'){
-            $ffin[10] = ' ';
+            //$ffin[10] = ' ';
             return json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.tiempo <='".$ffin."' and m.id_sensor=".$idsensor." and d.identificador='".$iddispositivo."'"), JSON_UNESCAPED_UNICODE);
         } else {
             return json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.id_sensor=".$idsensor." and d.identificador='".$iddispositivo."'"), JSON_UNESCAPED_UNICODE);
