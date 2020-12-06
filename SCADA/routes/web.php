@@ -5,6 +5,8 @@ use App\Http\Controllers\devtestController;
 use App\Http\Controllers\DummyDeviceController;
 use App\Http\Controllers\endpoints;
 use App\Http\Controllers\ctrlDispositivos;
+use App\Http\Controllers\ctrlTiposDispositivos;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,8 +48,15 @@ Route::get('endpoints/get:sensores', [endpoints::class, "get_sensores"]);
 Route::get('endpoints/get:sensoresbydispositivo/{id}', [endpoints::class, "get_sensoresbydispositivo"]);
 Route::get('endpoints/get:medidasbydispositivo/{iddispositivo}/{idsensor}/{finicio}/{ffin}', [endpoints::class, "get_medidasbydispositivo"]);
 
-
+Route::get('dispositivos/get:get_dispositivobyid/{id}', [ctrlDispositivos::class, "get_dispositivobyid"]);
+Route::get('dispositivos/get:get_dispositivobyidentificador/{identificador}', [ctrlDispositivos::class, "get_dispositivobyidentificador"]);
 Route::post('dispositivos/post:insert_dispositivo/{ubicacion}/{fecha_alta}/{id_tipo}/{marca}/{modelo}/{identificador}', [ctrlDispositivos::class, "insert_dispositivo"]);
 Route::put('dispositivos/put:update_dispositivo/{ubicacion}/{id_tipo}/{marca}/{modelo}/{identificador}', [ctrlDispositivos::class, "update_dispositivo"]);
 Route::put('dispositivos/put:baja_dispositivo/{identificador}', [ctrlDispositivos::class, "baja_dispositivo"]);
 Route::put('dispositivos/put:alta_dispositivo/{identificador}', [ctrlDispositivos::class, "alta_dispositivo"]);
+
+Route::get('tiposdispositivos/get:tiposdispositivos/', [ctrlDispositivos::class, "list_tiposdispositivos"]);
+Route::get('tiposdispositivos/get:get_tipodispositivobyid/{id}', [ctrlDispositivos::class, "get_tipodispositivobyid"]);
+Route::post('tiposdispositivos/post:insert_tipodispositivo/{updatetime}/{categoria}/{proposito}', [ctrlDispositivos::class, "insert_tipodispositivo"]);
+Route::put('tiposdispositivos/put:update_tipodispositivo/{id}/{updatetime}/{categoria}/{proposito}', [ctrlDispositivos::class, "update_tipodispositivo"]);
+

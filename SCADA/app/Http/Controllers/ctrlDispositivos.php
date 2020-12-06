@@ -7,6 +7,18 @@ use Illuminate\Support\Facades\DB;
 
 class ctrlDispositivos extends Controller
 {
+    public function get_dispositivobyid($id)
+    {
+		$data = json_encode(DB::select("Select d.id, d.actividad, d.ubicacion, td.categoria, d.ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as td where td.id = d.id_tipo and d.id=?", [$id]));
+		return response($data, 200) ->header('Content-Type', 'application/json');
+    }
+
+    public function get_dispositivobyidentificador($identificador)
+    {
+		$data = json_encode(DB::select("Select d.id, d.actividad, d.ubicacion, td.categoria, d.ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as td where td.id = d.id_tipo and d.identificador=?", [$identificador]));
+		return response($data, 200) ->header('Content-Type', 'application/json');
+    }
+    
     public function insert_dispositivo($ubicacion, $fecha_alta, $id_tipo, $marca, $modelo, $identificador)
     {
 		DB::insert("insert into dispositivos (actividad, ubicacion, fecha_alta, id_tipo, marca, modelo, ultima_actualizacion, identificador) values ('1', ?, ?, ?, ?, ?, '1900-01-01 00:00:00', ?)", [$ubicacion, $fecha_alta, $id_tipo, $marca, $modelo, $identificador]);
