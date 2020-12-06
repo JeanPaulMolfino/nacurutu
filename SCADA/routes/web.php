@@ -37,6 +37,10 @@ Route::get('chart1Plot', function () {
 Route::get('dummyDevice', [DummyDeviceController::class, "index"]);
 
 Route::get('endpoints/get:dispositivos', [endpoints::class, "get_dispositivos"]);
+Route::get('endpoints/get:dispositivos_tipos', [endpoints::class, "get_dispositivos_tipos"]);
+Route::get('endpoints/get:sensores', [endpoints::class, "get_sensores"]);
+///Route::get('endpoints/get:sensores_tipos', [endpoints::class, "get_sensores_tipos"]);
+
 Route::get('endpoints/get:sensoresbydispositivo/{id}', [endpoints::class, "get_sensoresbydispositivo"]);
 Route::get('endpoints/get:medidasbydispositivo/{iddispositivo}/{idsensor}/{finicio}/{ffin}', [endpoints::class, "get_medidasbydispositivo"]);
 

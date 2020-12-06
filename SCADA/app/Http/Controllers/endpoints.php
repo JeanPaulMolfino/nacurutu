@@ -9,9 +9,28 @@ class endpoints extends Controller
 {
     public function get_dispositivos()
     {
-        return json_encode(DB::select("Select d.id, d.actividad, d.ubicacion, td.categoria, d.ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as td where td.id = d.id_tipo"));
+		$data = json_encode(DB::select("Select d.id, d.actividad, d.ubicacion, td.categoria, d.ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as td where td.id = d.id_tipo"));
+		return response($data, 200) ->header('Content-Type', 'application/json');
+	}
+	
+	public function get_dispositivos_tipos()
+    {
+		$data = json_encode(DB::select("Select td.* from tipos_dispositivos as td"));
+        return response($data, 200) ->header('Content-Type', 'application/json');
     }
 
+	public function get_sensores()
+    {
+		$data = json_encode(DB::select("Select s.* from sensores as s"));
+		return response($data, 200) ->header('Content-Type', 'application/json');
+	}
+
+	public function get_sensores_tipos()
+    {
+		$data = json_encode(DB::select("Select st.* from sensores_tipos as st"));
+        return response($data, 200) ->header('Content-Type', 'application/json');
+	}
+	
     public function get_sensoresbydispositivo($id)
     {
         return json_encode(DB::select("Select s.* from dispositivos as d inner join tipos_dispositivos as td inner join sensores as s where td.id = d.id_tipo and td.id = s.id_tipo and d.identificador='".$id."'"), JSON_UNESCAPED_UNICODE);
