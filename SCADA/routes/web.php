@@ -48,5 +48,6 @@ Route::get('endpoints/get:medidasbydispositivo/{iddispositivo}/{idsensor}/{finic
 
 
 Route::post('dispositivos/post:insert_dispositivo/{ubicacion}/{fecha_alta}/{id_tipo}/{marca}/{modelo}/{identificador}', [ctrlDispositivos::class, "insert_dispositivo"]);
+Route::put('dispositivos/put:update_dispositivo/{ubicacion}/{id_tipo}/{marca}/{modelo}/{identificador}', [ctrlDispositivos::class, "update_dispositivo"]);
 Route::put('dispositivos/put:baja_dispositivo/{identificador}', [ctrlDispositivos::class, "baja_dispositivo"]);
 Route::put('dispositivos/put:alta_dispositivo/{identificador}', [ctrlDispositivos::class, "alta_dispositivo"]);
