@@ -9,7 +9,7 @@ class endpoints extends Controller
 {
     public function get_dispositivos()
     {
-		$data = json_encode(DB::select("Select d.id, d.actividad, d.ubicacion, td.categoria, d.ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as td where td.id = d.id_tipo"));
+		$data = json_encode(DB::select("Select d.id, d.identificador, d.actividad, d.ubicacion, td.categoria, d.ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as td where td.id = d.id_tipo"));
 		return response($data, 200) ->header('Content-Type', 'application/json');
 	}
 	
