@@ -38,6 +38,10 @@ Route::get('chart1Plot', function () {
     return view('chart1Plot');
 });
 
+Route::get('testvue', function () {
+    return view('testvue');
+});
+
 Route::get('dummyDevice', [DummyDeviceController::class, "index"]);
 
 Route::get('endpoints/get:dispositivos', [endpoints::class, "get_dispositivos"]);

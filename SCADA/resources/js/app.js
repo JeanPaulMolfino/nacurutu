@@ -33,6 +33,8 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('linechart-component', require('./components/LineChartComponent.vue').default);
 Vue.component('charttest2-component', require('./components/ChartTest2Component.vue').default);
 Vue.component('charttest2container-component', require('./components/ChartContainerTest2Component.vue').default);
+
+Vue.component('testcomp', require('./components/testcomp').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -42,3 +44,4 @@ Vue.component('charttest2container-component', require('./components/ChartContai
 const app = new Vue({
     el: '#app',
 });
+
