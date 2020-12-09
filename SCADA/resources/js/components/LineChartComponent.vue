@@ -72,7 +72,7 @@
 		},
 		mounted () {
 			const getData = async () => {
-				const response = await fetch('http://127.0.0.1:8000/endpoints/get:medidasbydispositivo/EM1234/2/2020-12-04/2021-01-01');
+				const response = await fetch('http://127.0.0.1:8000/endpoints/get:medidasbydispositivo/EM1234/2/2020-12-02/2021-01-01');
 				const myJson = await response.json(); //extract JSON from the http response
 				return myJson;
 			}
