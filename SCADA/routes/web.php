@@ -6,6 +6,7 @@ use App\Http\Controllers\DummyDeviceController;
 use App\Http\Controllers\endpoints;
 use App\Http\Controllers\ctrlDispositivos;
 use App\Http\Controllers\ctrlTiposDispositivos;
+use App\Http\Controllers\ctrlSensores;
 
 use Illuminate\Support\Facades\Route;
 
@@ -59,8 +60,14 @@ Route::put('dispositivos/put:update_dispositivo/{ubicacion}/{id_tipo}/{marca}/{m
 Route::put('dispositivos/put:baja_dispositivo/{identificador}', [ctrlDispositivos::class, "baja_dispositivo"]);
 Route::put('dispositivos/put:alta_dispositivo/{identificador}', [ctrlDispositivos::class, "alta_dispositivo"]);
 
-Route::get('tiposdispositivos/get:tiposdispositivos/', [ctrlTiposDispositivos::class, "list_tiposdispositivos"]);
+Route::get('tiposdispositivos/get:get_tiposdispositivos/', [ctrlTiposDispositivos::class, "list_tiposdispositivos"]);
 Route::get('tiposdispositivos/get:get_tipodispositivobyid/{id}', [ctrlTiposDispositivos::class, "get_tipodispositivobyid"]);
 Route::post('tiposdispositivos/post:insert_tipodispositivo/{updatetime}/{categoria}/{proposito}', [ctrlTiposDispositivos::class, "insert_tipodispositivo"]);
 Route::put('tiposdispositivos/put:update_tipodispositivo/{id}/{updatetime}/{categoria}/{proposito}', [ctrlTiposDispositivos::class, "update_tipodispositivo"]);
+
+Route::get('sensores/get:get_sensoresbytipo/{id_tipo}', [ctrlSensores::class, "get_sensorbytipo"]);
+Route::post('sensores/post:insert_sensores/{id_tipo}/{id_sensor_secundario}/{unidadmedida}/{grafica}/{nombre}', [ctrlSensores::class, "insert_sensor"]);
+Route::put('sensores/put:insert_sensores/{id}/{id_tipo}/{id_sensor_secundario}/{unidadmedida}/{grafica}/{nombre}', [ctrlSensores::class, "update_sensor"]);
+
+
 
