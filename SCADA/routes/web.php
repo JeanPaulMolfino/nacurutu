@@ -1,13 +1,12 @@
 <?php
 
 use App\Http\Controllers\API;
+use App\Http\Controllers\ctrlDispositivos;
+use App\Http\Controllers\ctrlSensores;
+use App\Http\Controllers\ctrlTiposDispositivos;
 use App\Http\Controllers\devtestController;
 use App\Http\Controllers\DummyDeviceController;
 use App\Http\Controllers\endpoints;
-use App\Http\Controllers\ctrlDispositivos;
-use App\Http\Controllers\ctrlTiposDispositivos;
-use App\Http\Controllers\ctrlSensores;
-
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,6 +54,8 @@ Route::get('endpoints/get:medidasbydispositivo/{iddispositivo}/{idsensor}/{finic
 
 Route::get('dispositivos/get:get_dispositivobyid/{id}', [ctrlDispositivos::class, "get_dispositivobyid"]);
 Route::get('dispositivos/get:get_dispositivobyidentificador/{identificador}', [ctrlDispositivos::class, "get_dispositivobyidentificador"]);
+Route::get('dispositivos/get:get_latestmedidasbydispositivo/{identificador}', [ctrlDispositivos::class, "get_latestmedidasbydispositivo"]);
+Route::get('dispositivos/get:get_ultima_actualizacionbyidentificador/{identificador}', [ctrlDispositivos::class, "get_ultima_actualizacionbyidentificador"]);
 Route::post('dispositivos/post:insert_dispositivo/{ubicacion}/{fecha_alta}/{id_tipo}/{marca}/{modelo}/{identificador}', [ctrlDispositivos::class, "insert_dispositivo"]);
 Route::put('dispositivos/put:update_dispositivo/{ubicacion}/{id_tipo}/{marca}/{modelo}/{identificador}', [ctrlDispositivos::class, "update_dispositivo"]);
 Route::put('dispositivos/put:baja_dispositivo/{identificador}', [ctrlDispositivos::class, "baja_dispositivo"]);
@@ -68,6 +69,3 @@ Route::put('tiposdispositivos/put:update_tipodispositivo/{id}/{updatetime}/{cate
 Route::get('sensores/get:get_sensoresbytipo/{id_tipo}', [ctrlSensores::class, "get_sensorbytipo"]);
 Route::post('sensores/post:insert_sensores/{id_tipo}/{id_sensor_secundario}/{unidadmedida}/{grafica}/{nombre}', [ctrlSensores::class, "insert_sensor"]);
 Route::put('sensores/put:insert_sensores/{id}/{id_tipo}/{id_sensor_secundario}/{unidadmedida}/{grafica}/{nombre}', [ctrlSensores::class, "update_sensor"]);
-
-
-
