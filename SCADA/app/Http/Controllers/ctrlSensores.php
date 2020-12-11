@@ -19,9 +19,9 @@ class ctrlSensores extends Controller
     }
 
     
-    public function update_dispositivo($id, $id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre)
+    public function update_sensor($id, $id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre)
     {
-        DB::update("update dispositivo set id_tipo = ?, id_sensor_secundario = ?, unidadmedida = ?, grafica = ?, nombre = ? where id = ?", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $id]);
+        DB::update("update sensores set id_tipo = ?, id_sensor_secundario = ?, unidadmedida = ?, grafica = ?, nombre = ? where id = ?", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $id]);
     }
 
     //ToDo unnecessary
