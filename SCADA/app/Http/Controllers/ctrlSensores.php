@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ctrlSensores extends Controller
@@ -18,7 +17,6 @@ class ctrlSensores extends Controller
         DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, grafica, nombre) VALUES (?,?,?,?,?))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre]);
     }
 
-    
     public function update_sensor($id, $id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre)
     {
         DB::update("update sensores set id_tipo = ?, id_sensor_secundario = ?, unidadmedida = ?, grafica = ?, nombre = ? where id = ?", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $id]);
@@ -26,7 +24,7 @@ class ctrlSensores extends Controller
 
     //ToDo unnecessary
     /*public function baja_sensor($identificador)
-    {
-        DB::update("update dispositivos set actividad = '0' where identificador = ?", [$identificador]);
-    }*/
+{
+DB::update("update dispositivos set actividad = '0' where identificador = ?", [$identificador]);
+}*/
 }
