@@ -68,4 +68,4 @@ Route::put('tiposdispositivos/put:update_tipodispositivo/{id}/{updatetime}/{cate
 
 Route::get('sensores/get:get_sensoresbytipo/{id_tipo}', [ctrlSensores::class, "get_sensorbytipo"]);
 Route::post('sensores/post:insert_sensores/{id_tipo}/{id_sensor_secundario}/{unidadmedida}/{grafica}/{nombre}', [ctrlSensores::class, "insert_sensor"]);
-Route::put('sensores/put:insert_sensores/{id}/{id_tipo}/{id_sensor_secundario}/{unidadmedida}/{grafica}/{nombre}', [ctrlSensores::class, "update_sensor"]);
+Route::put('sensores/put:update_sensores/{id}/{id_tipo}/{id_sensor_secundario}/{unidadmedida}/{grafica}/{nombre}', [ctrlSensores::class, "update_sensor"]);
