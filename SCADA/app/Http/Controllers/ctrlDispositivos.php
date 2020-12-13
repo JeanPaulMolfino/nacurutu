@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class ctrlDispositivos extends Controller
 {
@@ -31,7 +32,7 @@ class ctrlDispositivos extends Controller
         return response($data, 200)->header('Content-Type', 'application/json');
     }
 
-    public function insert_dispositivo($ubicacion, $fecha_alta, $id_tipo, $marca, $modelo, $identificador)
+    public function insert_dispositivo(Request $request, $ubicacion, $fecha_alta, $id_tipo, $marca, $modelo, $identificador)
     {
         DB::insert("insert into dispositivos (actividad, ubicacion, fecha_alta, id_tipo, marca, modelo, ultima_actualizacion, identificador) values ('1', ?, ?, ?, ?, ?, '1900-01-01 00:00:00', ?)", [$ubicacion, $fecha_alta, $id_tipo, $marca, $modelo, $identificador]);
     }
