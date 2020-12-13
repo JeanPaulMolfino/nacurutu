@@ -1,307 +1,497 @@
 <template>
-    <div id="container">
-        <div class="contentContainerContainer">
-            <div class="contentContainer">
-                <div class="tabContainer">
-                    <div
-                        @click="seleccionarFruta('dispositivos')"
-                        :class="[
-                            isActive('dispositivos') ? 'activeTab' : 'tab'
-                        ]"
-                    >
-                        <p>Dispositivos</p>
-                    </div>
-                    <div
-                        v-for="(fruta, index) in frutas"
-                        :key="index"
-                        @click="seleccionarFruta(fruta.nombre)"
-                        :class="[isActive(fruta.nombre) ? 'activeTab' : 'tab']"
-                    >
-                        <p>{{ fruta.nombre }}</p>
-                        <button @click="eliminarTab(fruta)" class="deleteBtn">
-                            X
-                        </button>
-                    </div>
-                </div>
-
-                <div v-for="(fruta, index) in frutas" :key="index">
-                    <div
-                        v-if="
-                            fruta.nombre === tabSeleccionada ||
-                                (tabSeleccionada === '' && index === 0)
-                        "
-                    >
-                        <div class="descripcion">
-                            <img v-bind:src="fruta.foto" class="frutaImg" />
-                            <p>{{ fruta.descripcion }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div v-if="'dispositivos' === tabSeleccionada">
-                        <div class="descripcion">
-                            <button
-                                @click="nuevoDispositivo()"
-                                class="nuevoBtn"
-                            >
-                                NUEVO DISPOSITIVO
-                            </button>
-                            <div
-                                v-for="(fruta, index) in frutasDesechadas"
-                                :key="index"
-                                class="frutasDesechadas"
-                            >
-                                <p>
-                                    {{ fruta.nombre }}
-                                    <button
-                                        @click="anadirTab(fruta)"
-                                        class="addBtn"
-                                    >
-                                        +
-                                    </button>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div id="container">
+    <div class="contentContainerContainer">
+      <div class="contentContainer">
+        <div class="nav nav-pills nav-justified">
+          <div
+            @click="seleccionarFruta('dispositivos')"
+            :class="[
+              isActive('dispositivos')
+                ? 'nav-item nav-link active'
+                : 'nav-item nav-link',
+            ]"
+          >
+            <p>Dispositivos</p>
+          </div>
+          <div
+            v-for="(dispositivo, index) in frutas"
+            :key="index"
+            @click="seleccionarFruta(dispositivo.identificador)"
+            :class="[
+              isActive(dispositivo.identificador)
+                ? 'nav-item nav-link active'
+                : 'nav-item nav-link',
+            ]"
+          >
+            <p>
+              {{ dispositivo.categoria }} -
+              {{ dispositivo.identificador }}
+            </p>
+            <button
+              @click="eliminarTab(dispositivo)"
+              type="button"
+              class="deleteBtn"
+            >
+              <svg
+                width="0.8em"
+                height="0.8em"
+                viewBox="0 0 16 16"
+                class="bi bi-x-circle-fill"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
+
+        <div v-for="(dispositivo, index) in dispositivos" :key="index">
+          <div v-if="dispositivo.identificador === tabSeleccionada">
+            <div class="descripcion">
+              <p>
+                Actividad del dispositivo:
+                {{ dispositivo.actividad ? "TRUE" : "FALSE" }}
+              </p>
+              <p>
+                {{ dispositivo.categoria }} -
+                {{ dispositivo.identificador }}
+              </p>
+              <p>
+                Ultima actualización:
+                {{ dispositivo.ultima_actualizacion }}
+              </p>
+              <p>Sensores:</p>
+              <div
+                v-for="(sensor, index) in sensores[dispositivo.identificador]"
+                :key="index"
+              >
+                <p>
+                  -
+                  {{ sensor.nombre }}: {{ sensor.lectura }}
+                  {{ sensor.unidadmedida }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div v-if="'dispositivos' === tabSeleccionada">
+            <div class="descripcion">
+              <button
+                @click="displayForm()"
+                :class="[formulario ? 'invisible' : 'btn btn-success']"
+              >
+                NUEVO DISPOSITIVO
+              </button>
+              <div
+                v-for="(dispositivo, index) in dispositivos"
+                :key="index"
+                :class="[formulario ? 'invisible' : 'frutasDesechadas']"
+              >
+                <p>
+                  {{ dispositivo.categoria }} -
+                  {{ dispositivo.identificador }}
+                  <button @click="anadirTab(dispositivo)" class="addBtn">
+                    <svg
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 16 16"
+                      class="bi bi-plus-circle-fill"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+
+              <div :class="[formulario ? '' : 'invisible']">
+                <b-form @submit="checkForm" @reset="onReset">
+                  <b-form-group
+                    id="input-group-1"
+                    label="Identificador del dispositivo:"
+                    label-for="input-1"
+                  >
+                    <b-form-input
+                      id="input-1"
+                      v-model="form.identificador"
+                      required
+                      placeholder="Identificador"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-2"
+                    label="Categoria del dispositivo:"
+                    label-for="input-2"
+                  >
+                    <b-form-input
+                      id="input-2"
+                      v-model="form.categoria"
+                      required
+                      placeholder="Categoria"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <div class="form-group row">
+                    <b-button type="submit" variant="primary">Enviar</b-button>
+                    <b-button type="reset" variant="warning">Resetear</b-button>
+                    <b-button @click="displayForm()" variant="danger"
+                      >Cancelar</b-button
+                    >
+                  </div>
+                </b-form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 export default {
-    expand:false,
-    props: {},
-    data() {
-        return {
-            titulo: "Testeo de Tabs",
-            frutas: [],
-            tabSeleccionada: "dispositivos",
-            frutasDesechadas: [
-                {
-                    nombre: "Uva",
-                    foto: "uva.jpg",
-                    descripcion:
-                        "La uva es una fruta perosa.Se denomina pera al fruto de distintas especies del género Pyrus, integrado por árboles caducifolios conocidos comúnmente como perales.1​ Sin embargo, cuando se trata del fruto comestible, se hace referencia mayormente al producido por el llamado peral común (Pyrus communis). La pera es una fruta jugosa, carnosa, y una de las más importantes producidas en las regiones templadas. En China, son consideradas como un símbolo de longevidad, porque aunque sus flores sugieren fragilidad, crecen en el peral, un árbol caracterizado por su fuerza y longevidad, capaz de resistir las sequías más duras. El carácter intenso bajo esa fragilidad aparente es una característica común en las flores y frutos de su familia -la de las Rosáceas-: rosas, fresas, melocotones y cerezas. Además, su inconfundible sabor resiste la destilación para elaborar aguardiente. La pera es una de las frutas que mejor tolera el organismo y de las que menos alergias producen, tiene un alto contenido en agua (más del 80%), por lo que es muy fácil de digerir; es rica en fibra, vitamina C y posee propiedades antioxidantes. 3​Por ende se considera muy adecuada para lograr un enriquecimiento vitamínico y favorecer una dieta sana y equilibrada.",
-                    datos: [10, 20, 30, 20],
-                    labels: [
-                        new Date("2018-07-07 00:00:00"),
-                        new Date("2018-07-08 00:00:00")
-                    ]
-                },
-                {
-                    nombre: "Pera",
-                    foto: "pera.jpg",
-                    descripcion:
-                        "La pera es una fruta perosa.Se denomina pera al fruto de distintas especies del género Pyrus, integrado por árboles caducifolios conocidos comúnmente como perales.1​ Sin embargo, cuando se trata del fruto comestible, se hace referencia mayormente al producido por el llamado peral común (Pyrus communis). La pera es una fruta jugosa, carnosa, y una de las más importantes producidas en las regiones templadas. En China, son consideradas como un símbolo de longevidad, porque aunque sus flores sugieren fragilidad, crecen en el peral, un árbol caracterizado por su fuerza y longevidad, capaz de resistir las sequías más duras. El carácter intenso bajo esa fragilidad aparente es una característica común en las flores y frutos de su familia -la de las Rosáceas-: rosas, fresas, melocotones y cerezas. Además, su inconfundible sabor resiste la destilación para elaborar aguardiente. La pera es una de las frutas que mejor tolera el organismo y de las que menos alergias producen, tiene un alto contenido en agua (más del 80%), por lo que es muy fácil de digerir; es rica en fibra, vitamina C y posee propiedades antioxidantes. 3​Por ende se considera muy adecuada para lograr un enriquecimiento vitamínico y favorecer una dieta sana y equilibrada.",
-                    datos: [10, 20, 30, 20],
-                    labels: [
-                        new Date("2018-07-07 00:00:00"),
-                        new Date("2018-07-08 00:00:00")
-                    ]
-                },
-                {
-                    nombre: "Manzana",
-                    foto: "manzana.jpg",
-                    descripcion:
-                        "La manzana cae del arbol. La manzana es el fruto comestible de la especie Malus domestica, llamada comúnmente manzano. Es una fruta pomácea de forma redonda y sabor más o menos dulce, dependiendo de la variedad.Los manzanos se cultivan en todo el mundo y son las especies más cultivadas en el género Malus. El árbol se originó en Asia Central, donde su ancestro salvaje, Malus sieversii, todavía se encuentra hoy en día. Las manzanas se han cultivado durante miles de años en Asia y Europa y fueron traídas a América del Norte por colonos europeos. Las manzanas tienen un significado religioso y mitológico en muchas culturas, incluyendo la tradición nórdica, griega y cristiana europea.  Los manzanos son grandes si se cultivan a partir de semillas. Generalmente, los cultivares de manzana se propagan injertando en portainjertos, que controlan el tamaño del árbol resultante. Hay más de 7.500 cultivares conocidos de manzanas, lo que resulta en una gama de características deseadas. Diferentes cultivares se crían para diversos gustos y uso, incluyendo cocinar, comer crudo y la producción de sidra. Los árboles y los frutos son propensos a una serie de problemas de hongos, bacterias y plagas, que pueden ser controlados por una serie de medios orgánicos y no orgánicos. En 2010, el genoma del fruto fue secuenciado como parte de la investigación sobre el control de enfermedades y la reproducción selectiva en la producción de manzanas.La producción mundial de manzanas en 2018 fue de 86 millones de toneladas, y China representa casi la mitad del total.",
-                    datos: [10, 20, 30, 20],
-                    labels: [
-                        new Date("2018-07-07 00:00:00"),
-                        new Date("2018-07-08 00:00:00")
-                    ]
-                },
-                {
-                    nombre: "Platano",
-                    foto: "banana.jpg",
-                    descripcion:
-                        "Sopa du macaco toma tu banana. La banana,1​ plátano,2​ guineo, banano, maduro, cambur o gualele, es un fruto comestible, botánicamente una baya, de varios tipos de grandes plantas herbáceas del género Musa. A estas plantas de gran porte que tienen aspecto de arbolillo se las denomina plataneras, bananeros, bananeras, plátanos o bananos.3 Es un fruto con cualidades variables en tamaño, color y firmeza, alargado, generalmente curvado y carnoso, rico en almidón cubierto con una cáscara, que puede ser verde, amarilla, roja, púrpura o marrón cuando está madura. Los frutos crecen en piñas que cuelgan de la parte superior de la planta.",
-                    datos: [10, 20, 30, 20],
-                    labels: [
-                        new Date("2018-07-07 00:00:00"),
-                        new Date("2018-07-08 00:00:00")
-                    ]
-                }
-            ]
-        };
-    },
-    methods: {
-        seleccionarFruta(fruta) {
-            this.tabSeleccionada = fruta;
-        },
-        isActive(fruta) {
-            var resultado = fruta === this.tabSeleccionada;
-            return resultado;
-        },
-        eliminarTab(fruta) {
-            for (var i = 0; i < this.frutas.length; i++) {
-                if (this.frutas[i] === fruta) {
-                    this.frutas.splice(i, 1);
-                }
-            }
-        },
-        añadirTab(fruta) {
-            if (this.frutas.includes(fruta)) {
-                this.tabSeleccionada = fruta.nombre;
-            } else {
-                this.frutas.push(fruta);
-            }
+  expand: false,
+  props: {},
+  data() {
+    return {
+      loaded: false,
+      dispositivos: [],
+      sensores: { type: Object, default: null },
+      endpoint: "/endpoints/get:dispositivos",
+      endpointSensores: "dispositivos/get:get_latestmedidasbydispositivo/",
+      endpointCategorias: "tiposdispositivos/get:get_tiposdispositivos/",
+      titulo: "Testeo de Tabs",
+      formulario: false,
+      frutas: [],
+      formError: {
+        identificador: false,
+        categoria: false,
+      },
+      categorias: {},
+      tabSeleccionada: "dispositivos",
+      frutasDesechadas: [],
+      form: {
+        categoria: "",
+        identificador: "",
+      },
+    };
+  },
+  methods: {
+    seleccionarFruta(fruta) {
+      for (var i = 0; i < this.frutas.length; i++) {
+        if (
+          this.frutas[i].identificador === fruta ||
+          fruta === "dispositivos"
+        ) {
+          this.tabSeleccionada = fruta;
         }
+      }
     },
-    methods: {
-        seleccionarFruta(fruta) {
-            this.tabSeleccionada = fruta;
-        },
-        isActive(fruta) {
-            var resultado = fruta === this.tabSeleccionada;
-            return resultado;
-        },
-        eliminarTab(fruta) {
-            for (var i = 0; i < this.frutas.length; i++) {
-                if (this.frutas[i] === fruta) {
-                    this.frutas.splice(i, 1);
-                }
-            }
-        },
-        anadirTab(fruta) {
-            if (this.frutas.includes(fruta)) {
-                this.tabSeleccionada = fruta.nombre;
-            } else {
-                this.frutas.push(fruta);
-            }
+    isActive(fruta) {
+      var resultado = fruta === this.tabSeleccionada;
+      return resultado;
+    },
+    eliminarTab(fruta) {
+      for (var i = 0; i < this.frutas.length; i++) {
+        if (this.frutas[i] === fruta) {
+          this.frutas.splice(i, 1);
         }
+      }
+      if (this.frutas.length === 0) {
+        this.tabSeleccionada = "dispositivos";
+      }
+      console.log(this.tabSeleccionada);
     },
-    mounted() {
-        console.log("Componente listado montado.");
+    anadirTab(dispositivo) {
+      if (this.frutas.includes(dispositivo)) {
+        this.tabSeleccionada = dispositivo.identificador;
+      } else {
+        this.frutas.push(dispositivo);
+      }
+      if (this.sensores[dispositivo.identificador] == null) {
+        this.fetchSensores(dispositivo.identificador);
+      }
+    },
+    displayForm() {
+      this.formulario = !this.formulario;
+    },
+    onReset(evt) {
+      evt.preventDefault();
+      this.form.categoria = "";
+      this.form.identificador = "";
+      this.formulario = false;
+      this.$nextTick(() => {
+        this.formulario = true;
+      });
+    },
+    checkForm: function (e) {
+      e.preventDefault();
+      let errorIdentificador = false;
+      let errorCategoria = false;
+
+      if (this.form.identificador == "" || this.form.identificador == null) {
+        errorIdentificador = true;
+      }
+      this.dispositivos.map((dispositivo) => {
+        if (dispositivo.identificador == this.form.identificador) {
+          errorIdentificador = true;
+        }
+      });
+      this.formError.identificador = errorIdentificador;
+
+      if (this.form.categoria == "" || this.form.categoria == null) {
+        errorCategoria = true;
+      }
+
+      if (!errorCategoria && !errorIdentificador) {
+        console.log("Un exito muchachin");
+        this.form.categoria = "";
+        this.form.identificador = "";
+        this.formulario = false;
+        this.$nextTick(() => {
+          this.formulario = true;
+        });
+        this.formulario = !this.formulario;
+      } else {
+        console.log("Malardo del mal ingresa bien las cosas");
+      }
+    },
+    async fetchCustom() {
+      this.loaded = false;
+      try {
+        const response = await fetch(this.endpoint);
+        const myJson = await response.json();
+        this.dispositivos = myJson;
+        this.loaded = true;
+      } catch (e) {
+        console.error("catched! " + e);
+      }
+    },
+    async fetchCategorias() {
+      this.loaded = false;
+      try {
+        const response = await fetch(this.endpointCategorias);
+        const myJson = await response.json();
+        this.categorias = myJson;
+        this.loaded = true;
+      } catch (e) {
+        console.error("catched! " + e);
+      }
+    },
+    async fetchSensores(dispositivo) {
+      this.loaded = false;
+      try {
+        const response = await fetch(this.endpointSensores + dispositivo);
+        const myJson = await response.json();
+        this.sensores[dispositivo] = myJson;
+        this.loaded = true;
+      } catch (e) {
+        console.error("catched! " + e);
+      }
+    },
+  },
+  mounted() {
+    const asyncInterval = async (callback, ms, triesLeft = 2) => {
+      return new Promise((resolve, reject) => {
+        const interval = setInterval(async () => {
+          if (await this.fetchCustom()) {
+            resolve();
+            clearInterval(interval);
+          } else if (triesLeft <= 1) {
+            reject();
+            clearInterval(interval);
+          }
+          triesLeft--;
+        }, 1000);
+      });
     }
+    const asyncCategorias = async (callback, ms, triesLeft = 2) => {
+      return new Promise((resolve, reject) => {
+        const interval = setInterval(async () => {
+          if (await this.fetchCategorias()) {
+            resolve();
+            clearInterval(interval);
+          } else if (triesLeft <= 1) {
+            reject();
+            clearInterval(interval);
+          }
+          triesLeft--;
+        }, 1000);
+      });
+    }
+    asyncCategorias();
+    asyncInterval();
+    console.log("Fetched");
+  },
 };
 </script>
 
 <style scoped>
 * {
-    margin: 0;
+  margin: 0;
+}
+
+.nav-justified > .nav-link,
+.nav-justified .nav-item {
+  background-color: #5a6268;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #23272b;
+}
+
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  border-radius: 35px;
+  font-size: 24px;
+  line-height: 1.33;
+}
+
+.btn-circle {
+  width: 20px;
+  height: 20px;
+  padding: 2px 0px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 11px;
 }
 
 .container {
-    display: flex;
-    width: 100vw;
-    margin: 20px 1vw 0 1vw;
-    min-height: 500px;
-    font-size: 3vw;
+  display: flex;
+  width: 100vw;
+  margin: 20px 1vw 0 1vw;
+  min-height: 500px;
+  font-size: 3vw;
 }
 
 .tab {
-    background-color: #6a9dc4;
-    position: relative;
-    top: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    transition: all 0.3s ease;
-    font-size: 1em;
-    font-weight: 500;
-    cursor: pointer;
-    justify-content: center;
-    color: cornsilk;
-    border: none;
+  background-color: #6a9dc4;
+  position: relative;
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  transition: all 0.3s ease;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  justify-content: center;
+  color: cornsilk;
+  border: none;
 }
 
 .tabContainer {
-    display: flex;
-    flex-direction: row;
-    height: 3em;
+  display: flex;
+  flex-direction: row;
+  height: 3em;
 }
 
 .activeTab {
-    background-color: #0d8af0;
-    color: #1b3447;
-    position: relative;
-    top: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    transition: all 0.3s ease;
-    font-size: 1.2em;
-    font-weight: 700;
-    cursor: pointer;
-    justify-content: center;
-    text-transform: uppercase;
-    border: none;
+  background-color: #0d8af0;
+  color: #1b3447;
+  position: relative;
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  transition: all 0.3s ease;
+  font-size: 1.2em;
+  font-weight: 700;
+  cursor: pointer;
+  justify-content: center;
+  text-transform: uppercase;
+  border: none;
 }
 
 .descripcion {
-    padding: 2em 3em;
-    font-size: 0.9em;
+  padding: 2em 3em;
+  font-size: 0.9em;
 }
 
 .tab:hover {
-    color: black;
+  color: black;
 }
 
 .frutaImg {
-    height: 20vw;
-    float: left;
-    margin: 1em 1em 0.5em 0;
+  height: 20vw;
+  float: left;
+  margin: 1em 1em 0.5em 0;
 }
 
 .frutasDesechadas {
-    flex-direction: column;
-    padding: 0.5vw 2vw;
+  flex-direction: column;
+  padding: 0.5vw 2vw;
 }
 
 .desechadasContainer {
-    border-style: solid;
-    border-radius: 36px 0 0 36px;
-    border-color: black;
-    border-width: 3px;
-    width: 15vw;
-    font-size: 2vw;
-    background-color: #98aab7;
-    display: flex;
-    flex-direction: column;
-    align-self: flex-start;
-    height: 100vh;
-    min-height: 500px;
+  border-style: solid;
+  border-radius: 36px 0 0 36px;
+  border-color: black;
+  border-width: 3px;
+  width: 15vw;
+  font-size: 2vw;
+  background-color: #98aab7;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  height: 100vh;
+  min-height: 500px;
 }
 
 .contentContainerContainer {
-    width: 98vw;
-    background-color: #b9d3e8;
+  width: 100vw;
+  height: 100vh;
+  background-color: #5d7f9e;
 }
 
 .contentContainer {
-    font-size: 2vw;
+  font-size: 2vw;
 }
 
 .title {
-    text-align: center;
+  text-align: center;
 }
 
 .addBtn {
-    border-radius: 50%;
-    padding: 4px 7px;
-    background-color: #4cb22a;
-    color: #335627;
-    cursor: pointer;
-    border: transparent;
+  padding: 4px 7px;
+  background-color: transparent;
+  color: #4cb22a;
+  cursor: pointer;
+  border: transparent;
 }
 
 .deleteBtn {
-    border-radius: 50%;
-    padding: 4px 7px;
-    background-color: #d13636;
-    color: #e8bebe;
-    cursor: pointer;
-    justify-content: flex-end;
-    align-self: end;
-    margin-left: 15vw;
-    margin-top: 4px;
-    position: absolute;
-    border: transparent;
+  background-color: transparent;
+  color: #d13636;
+  cursor: pointer;
+  border: transparent;
+  position: absolute;
+  right: 0;
+  top: -10px;
+}
+
+.invisible {
+  display: none !important ;
 }
 </style>

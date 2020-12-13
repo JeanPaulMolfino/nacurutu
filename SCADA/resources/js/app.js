@@ -32,7 +32,7 @@ Vue.component('chartlinestandalone', require('./components/ChartLineStandalone.v
 Vue.component('chartlinecontainer', require('./components/ChartLineContainer.vue').default);
 Vue.component('chartline', require('./components/ChartLine.vue').default);
 
-
+Vue.component('testcomp', require('./components/testcomp').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
