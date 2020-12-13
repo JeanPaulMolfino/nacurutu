@@ -8,13 +8,13 @@ class ctrlTiposDispositivos extends Controller
 {
     public function list_tiposdispositivos()
     {
-        $data = json_encode(DB::select("Select * from TiposDispositivos"));
+        $data = json_encode(DB::select("Select * from tipos_dispositivos"));
         return response($data, 200)->header('Content-Type', 'application/json');
     }
 
     public function get_tipodispositivobyid($id)
     {
-        $data = json_encode(DB::select("Select * from TiposDispositivos where id=?", [$id]));
+        $data = json_encode(DB::select("Select * from tipos_dispositivos where id=?", [$id]));
         return response($data, 200)->header('Content-Type', 'application/json');
     }
 
