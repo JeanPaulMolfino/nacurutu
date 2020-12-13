@@ -129,16 +129,71 @@
                   </b-form-group>
 
                   <b-form-group
-                    id="input-group-2"
+                    id="input-group-3"
                     label="Categoria del dispositivo:"
                     label-for="input-2"
                   >
-                    <b-form-input
+                    <b-form-select
                       id="input-2"
                       v-model="form.categoria"
+                      :options="nombreCategorias"
                       required
-                      placeholder="Categoria"
+                    ></b-form-select>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-3"
+                    label="Marca del dispositivo:"
+                    label-for="input-3"
+                  >
+                    <b-form-input
+                      id="input-3"
+                      v-model="form.marca"
+                      required
+                      placeholder="Marca"
                     ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-4"
+                    label="Modelo del dispositivo:"
+                    label-for="input-4"
+                  >
+                    <b-form-input
+                      id="input-4"
+                      v-model="form.modelo"
+                      required
+                      placeholder="Modelo"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-5"
+                    label="Ubicacion del dispositivo:"
+                    label-for="input-5"
+                  >
+                    <b-form-input
+                      id="input-5"
+                      v-model="form.ubicacion"
+                      placeholder="Ubicacion (no obligatorio)"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-6"
+                    label="Fecha de alta del dispositivo:"
+                    label-for="input-6"
+                  >
+                    <b-calendar
+                      id="input-6"
+                      v-model="form.fechaAlta"
+                      block
+                      @context="onContext"
+                      locale="en-US"
+                      selected-variant="success"
+                      today-variant="info"
+                      nav-button-variant="primary"
+                    ></b-calendar>
                   </b-form-group>
 
                   <div class="form-group row">
@@ -170,20 +225,31 @@ export default {
       endpoint: "/endpoints/get:dispositivos",
       endpointSensores: "dispositivos/get:get_latestmedidasbydispositivo/",
       endpointCategorias: "tiposdispositivos/get:get_tiposdispositivos/",
+      endpointCrearDispositivo: "dispositivos/post:insert_dispositivo/",
       titulo: "Testeo de Tabs",
       formulario: false,
       frutas: [],
       formError: {
         identificador: false,
         categoria: false,
+        marca: false,
+        modelo: false,
+        ubicacion: false,
+        fechaAlta: false,
       },
       categorias: {},
+      nombreCategorias: [],
       tabSeleccionada: "dispositivos",
       frutasDesechadas: [],
       form: {
         categoria: "",
         identificador: "",
+        marca: "",
+        modelo: "",
+        ubicacion: "",
+        fechaAlta: "",
       },
+      dateContext: null,
     };
   },
   methods: {
@@ -226,9 +292,13 @@ export default {
       this.formulario = !this.formulario;
     },
     onReset(evt) {
-      evt.preventDefault();
       this.form.categoria = "";
       this.form.identificador = "";
+      this.form.categoria = "";
+      this.form.marca = "";
+      this.form.modelo = "";
+      this.form.ubicacion = "";
+      this.form.fechaAlta = "";
       this.formulario = false;
       this.$nextTick(() => {
         this.formulario = true;
@@ -237,34 +307,40 @@ export default {
     checkForm: function (e) {
       e.preventDefault();
       let errorIdentificador = false;
-      let errorCategoria = false;
-
-      if (this.form.identificador == "" || this.form.identificador == null) {
-        errorIdentificador = true;
-      }
       this.dispositivos.map((dispositivo) => {
         if (dispositivo.identificador == this.form.identificador) {
           errorIdentificador = true;
         }
       });
+      this.categorias.map((categoria) => {
+        if (categoria.categoria == this.form.categoria) {
+          this.form.categoria = categoria;
+        }
+      });
       this.formError.identificador = errorIdentificador;
-
-      if (this.form.categoria == "" || this.form.categoria == null) {
-        errorCategoria = true;
-      }
-
-      if (!errorCategoria && !errorIdentificador) {
+      if (!errorIdentificador) {
+        this.sendDispositivo();
         console.log("Un exito muchachin");
-        this.form.categoria = "";
-        this.form.identificador = "";
-        this.formulario = false;
-        this.$nextTick(() => {
-          this.formulario = true;
-        });
-        this.formulario = !this.formulario;
+        console.log(
+          this.endpointCrearDispositivo +
+            this.form.ubicacion +
+            "/" +
+            this.form.fechaAlta +
+            "/" +
+            this.form.categoria.id +
+            "/" +
+            this.form.marca +
+            "/" +
+            this.form.modelo +
+            "/" +
+            this.form.identificador
+        );
       } else {
         console.log("Malardo del mal ingresa bien las cosas");
       }
+    },
+    onContext(ctx) {
+      this.dateContext = ctx;
     },
     async fetchCustom() {
       this.loaded = false;
@@ -280,9 +356,14 @@ export default {
     async fetchCategorias() {
       this.loaded = false;
       try {
+        var auxCategorias = [];
         const response = await fetch(this.endpointCategorias);
         const myJson = await response.json();
         this.categorias = myJson;
+        this.categorias.forEach((categoria) => {
+          auxCategorias.push(categoria.categoria);
+        });
+        this.nombreCategorias = auxCategorias;
         this.loaded = true;
       } catch (e) {
         console.error("catched! " + e);
@@ -294,6 +375,38 @@ export default {
         const response = await fetch(this.endpointSensores + dispositivo);
         const myJson = await response.json();
         this.sensores[dispositivo] = myJson;
+        this.loaded = true;
+      } catch (e) {
+        console.error("catched! " + e);
+      }
+    },
+    async sendDispositivo() {
+      this.loaded = false;
+      try {
+        const response = await fetch(
+          this.endpointCrearDispositivo +
+            this.form.ubicacion +
+            "/" +
+            this.form.fechaAlta +
+            "/" +
+            this.form.categoria.id +
+            "/" +
+            this.form.marca +
+            "/" +
+            this.form.modelo +
+            "/" +
+            this.form.identificador,
+          {
+            method: "POST",
+            mode: "no-cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            redirect: "follow", // manual, *follow, error
+            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          }
+        );
+        console.log("Dispositivo creado... supuestamente");
+        this.fetchCustom();
         this.loaded = true;
       } catch (e) {
         console.error("catched! " + e);
@@ -314,7 +427,7 @@ export default {
           triesLeft--;
         }, 1000);
       });
-    }
+    };
     const asyncCategorias = async (callback, ms, triesLeft = 2) => {
       return new Promise((resolve, reject) => {
         const interval = setInterval(async () => {
@@ -328,7 +441,7 @@ export default {
           triesLeft--;
         }, 1000);
       });
-    }
+    };
     asyncCategorias();
     asyncInterval();
     console.log("Fetched");
@@ -339,6 +452,7 @@ export default {
 <style scoped>
 * {
   margin: 0;
+  overflow-x: hidden;
 }
 
 .nav-justified > .nav-link,
@@ -462,7 +576,7 @@ export default {
 .contentContainerContainer {
   width: 100vw;
   height: 100vh;
-  background-color: #5d7f9e;
+  /** background-color: #5d7f9e; **/
 }
 
 .contentContainer {
