@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-12-2020 a las 03:33:59
+-- Tiempo de generación: 14-12-2020 a las 03:55:21
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.4.10
 
@@ -49,7 +49,21 @@ CREATE TABLE `dispositivos` (
 
 INSERT INTO `dispositivos` (`id`, `actividad`, `ubicacion`, `fecha_alta`, `fecha_baja`, `id_tipo`, `marca`, `modelo`, `ultima_actualizacion`, `identificador`) VALUES
 (1, 1, '', '2020-12-02', NULL, 1, 'Motorola', 'Vinex', '2020-12-11 11:32:01', 'EM1234'),
-(3, 1, 'asd', '2020-12-01', NULL, 1, 'asdd', 'adddd', '2020-12-11 11:32:01', 'EM12222');
+(3, 1, 'asd', '2020-12-01', NULL, 1, 'asdd', 'adddd', '2020-12-11 11:32:01', 'EM12222'),
+(4, 1, 'eeeee', '2020-12-23', NULL, 1, 'qqwqw', 'wwwww', '1900-01-01 00:00:00', 'sdfsdf');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `graficas`
+--
+
+DROP TABLE IF EXISTS `graficas`;
+CREATE TABLE `graficas` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL,
+  `ruta` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -133,25 +147,27 @@ CREATE TABLE `sensores` (
   `id_tipo` int(11) NOT NULL,
   `id_sensor_secundario` int(11) NOT NULL,
   `unidadmedida` varchar(8) NOT NULL,
-  `grafica` varchar(40) NOT NULL,
-  `nombre` varchar(20) NOT NULL
+  `nombre` varchar(20) NOT NULL,
+  `min` float DEFAULT NULL,
+  `max` float DEFAULT NULL,
+  `id_grafica` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `sensores`
 --
 
-INSERT INTO `sensores` (`id`, `id_tipo`, `id_sensor_secundario`, `unidadmedida`, `grafica`, `nombre`) VALUES
-(1, 1, 1, ' ºC', '', 'T_amb'),
-(3, 1, 2, 'ºC', '', 'T_int'),
-(5, 1, 3, '%', '', 'Humedad'),
-(6, 1, 4, 'HPa', '', 'Pres_atm'),
-(7, 1, 5, ' W/m^2', '', 'Irrad_solar'),
-(8, 1, 6, 'W/m^2', '', 'Irrad_UV'),
-(9, 1, 7, 'm/s', '', 'Vel_viento'),
-(10, 1, 8, 'Grados, ', '', 'Dir_viento'),
-(11, 1, 9, 'mm / m^2', '', 'Ind_pluvio'),
-(12, 3, 1, 'ºC', 'asd.php', 'Temperatura');
+INSERT INTO `sensores` (`id`, `id_tipo`, `id_sensor_secundario`, `unidadmedida`, `nombre`, `min`, `max`, `id_grafica`) VALUES
+(1, 1, 1, ' ºC', 'T_amb', NULL, NULL, NULL),
+(3, 1, 2, 'ºC', 'T_int', NULL, NULL, NULL),
+(5, 1, 3, '%', 'Humedad', NULL, NULL, NULL),
+(6, 1, 4, 'HPa', 'Pres_atm', NULL, NULL, NULL),
+(7, 1, 5, ' W/m^2', 'Irrad_solar', NULL, NULL, NULL),
+(8, 1, 6, 'W/m^2', 'Irrad_UV', NULL, NULL, NULL),
+(9, 1, 7, 'm/s', 'Vel_viento', NULL, NULL, NULL),
+(10, 1, 8, 'Grados, ', 'Dir_viento', NULL, NULL, NULL),
+(11, 1, 9, 'mm / m^2', 'Ind_pluvio', NULL, NULL, NULL),
+(12, 3, 1, 'ºC', 'Temperatura', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -188,6 +204,12 @@ ALTER TABLE `dispositivos`
   ADD KEY `fk_dispositivo_tipos` (`id_tipo`);
 
 --
+-- Indices de la tabla `graficas`
+--
+ALTER TABLE `graficas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `logdispositivos`
 --
 ALTER TABLE `logdispositivos`
@@ -206,7 +228,8 @@ ALTER TABLE `medidas`
 --
 ALTER TABLE `sensores`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_tipo` (`id_tipo`);
+  ADD KEY `id_tipo` (`id_tipo`),
+  ADD KEY `sensores_grafica` (`id_grafica`);
 
 --
 -- Indices de la tabla `tipos_dispositivos`
@@ -222,7 +245,13 @@ ALTER TABLE `tipos_dispositivos`
 -- AUTO_INCREMENT de la tabla `dispositivos`
 --
 ALTER TABLE `dispositivos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `graficas`
+--
+ALTER TABLE `graficas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `logdispositivos`
@@ -274,6 +303,7 @@ ALTER TABLE `medidas`
 -- Filtros para la tabla `sensores`
 --
 ALTER TABLE `sensores`
+  ADD CONSTRAINT `sensores_grafica` FOREIGN KEY (`id_grafica`) REFERENCES `graficas` (`id`),
   ADD CONSTRAINT `sensores_ibfk_1` FOREIGN KEY (`id_tipo`) REFERENCES `tipos_dispositivos` (`id`);
 COMMIT;
 
