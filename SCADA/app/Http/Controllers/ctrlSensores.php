@@ -12,14 +12,28 @@ class ctrlSensores extends Controller
         return response($data, 200)->header('Content-Type', 'application/json');
     }
 
-    public function insert_sensor($id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre)
+    public function insert_sensor($id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $min, $max)
     {
-        DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, grafica, nombre) VALUES (?,?,?,?,?))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre]);
+        //DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, grafica, nombre) VALUES (?,?,?,?,?))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre]);
+        if ($min != "null" && $max == "null") {
+            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, grafica, nombre, min) VALUES (?,?,?,?,?,?))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $min]);
+        } else if ($min == "null" && $max != "null") {
+            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, grafica, nombre, max) VALUES (?,?,?,?,?,?))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $max]);
+        } else {
+            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, grafica, nombre, min, max) VALUES (?,?,?,?,?,?,?))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $min, $max]);
+        }
+
     }
 
-    public function update_sensor($id, $id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre)
+    public function update_sensor($id, $id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $min, $max)
     {
-        DB::update("update sensores set id_tipo = ?, id_sensor_secundario = ?, unidadmedida = ?, grafica = ?, nombre = ? where id = ?", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $id]);
+        if ($min == "null") {
+            $min = null;
+        }
+        if ($max == "null") {
+            $max = null;
+        }
+        DB::update("update sensores set id_tipo = ?, id_sensor_secundario = ?, unidadmedida = ?, grafica = ?, nombre = ?, min=?, max=? where id = ?", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $min, $max, $id]);
     }
 
     //ToDo unnecessary
