@@ -82,15 +82,22 @@
           <div v-if="'dispositivos' === tabSeleccionada">
             <div class="descripcion">
               <button
-                @click="displayForm()"
-                :class="[formulario ? 'invisible' : 'btn btn-success']"
+                @click="makeDisplay('formulario')"
+                :class="[display === 'main' ? 'btn btn-success' : 'invisible']"
               >
                 NUEVO DISPOSITIVO
               </button>
+              <button
+                @click="makeDisplay('listCategorias')"
+                :class="[display === 'main' ? 'btn btn-success' : 'invisible']"
+              >
+                LISTAR CATEGORIAS
+              </button>
+
               <div
                 v-for="(dispositivo, index) in dispositivos"
                 :key="index"
-                :class="[formulario ? 'invisible' : 'frutasDesechadas']"
+                :class="[display === 'main' ? 'frutasDesechadas' : 'invisible']"
               >
                 <p>
                   {{ dispositivo.categoria }} -
@@ -113,7 +120,7 @@
                 </p>
               </div>
 
-              <div :class="[formulario ? '' : 'invisible']">
+              <div :class="[display === 'formulario' ? '' : 'invisible']">
                 <b-form @submit="checkForm" @reset="onReset">
                   <b-form-group
                     id="input-group-1"
@@ -199,7 +206,106 @@
                   <div class="form-group row">
                     <b-button type="submit" variant="primary">Enviar</b-button>
                     <b-button type="reset" variant="warning">Resetear</b-button>
-                    <b-button @click="displayForm()" variant="danger"
+                    <b-button @click="makeDisplay('main')" variant="danger"
+                      >Cancelar</b-button
+                    >
+                  </div>
+                </b-form>
+              </div>
+
+              <div
+                v-for="(categoria, index) in categorias"
+                :key="index"
+                :class="[
+                  display === 'listCategorias'
+                    ? 'frutasDesechadas'
+                    : 'invisible',
+                ]"
+              >
+                <p>
+                  {{ categoria.categoria }} - {{ categoria.id }} -
+                  {{ categoria.proposito }}
+
+                  <b-button v-b-toggle="idCategoriaToggle(categoria.id)" variant="primary"
+                    >Mostrar sensores</b-button
+                  >
+                  <b-collapse :id="idCategoriaToggle(categoria.id)" class="mt-2">
+                    <b-card>
+                      <p class="card-text">Mostrar sensores</p>
+                    </b-card>
+                  </b-collapse>
+                  
+                </p>
+              </div>
+              <button
+                @click="makeDisplay('nuevaCategoria')"
+                :class="[
+                  display === 'listCategorias'
+                    ? 'btn btn-success'
+                    : 'invisible',
+                ]"
+              >
+                NUEVA CATEGORIA
+              </button>
+              <b-button
+                @click="makeDisplay('main')"
+                :class="[
+                  display === 'listCategorias'
+                    ? 'btn btn-success'
+                    : 'invisible',
+                ]"
+                variant="danger"
+                >ATRAS</b-button
+              >
+
+              <div :class="[display === 'nuevaCategoria' ? '' : 'invisible']">
+                <b-form @submit="checkFormCategoria" @reset="onResetCategoria">
+                  <b-form-group
+                    id="input-group-1"
+                    label="Nombre de la categoria:"
+                    label-for="input-1"
+                  >
+                    <b-form-input
+                      id="input-1"
+                      v-model="formCategoria.categoria"
+                      required
+                      placeholder="Nombre categoria"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-3"
+                    label="Proposito de la categoria:"
+                    label-for="input-2"
+                  >
+                    <b-form-input
+                      id="input-3"
+                      required
+                      v-model="formCategoria.proposito"
+                      placeholder="Proposito"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-1"
+                    label="Tiempo de actualziacion:"
+                    label-for="input-3"
+                  >
+                    <b-form-input
+                      id="input-1"
+                      v-model="formCategoria.updatetime"
+                      type="number"
+                      required
+                      placeholder="Tiempo de actualziacion"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <div class="form-group row">
+                    <b-button type="submit" variant="primary">Crear</b-button>
+                    <b-button type="reset" variant="warning">Resetear</b-button>
+                    <b-button
+                      @click="makeDisplay('listCategorias')"
+                      variant="danger"
                       >Cancelar</b-button
                     >
                   </div>
@@ -222,21 +328,15 @@ export default {
       loaded: false,
       dispositivos: [],
       sensores: { type: Object, default: null },
+      sensoresCategoria: {},
       endpoint: "/endpoints/get:dispositivos",
       endpointSensores: "dispositivos/get:get_latestmedidasbydispositivo/",
       endpointCategorias: "tiposdispositivos/get:get_tiposdispositivos/",
       endpointCrearDispositivo: "dispositivos/post:insert_dispositivo/",
+      endpointCrearCategoria: "tiposdispositivos/post:insert_tipodispositivo/",
       titulo: "Testeo de Tabs",
-      formulario: false,
+      display: "main",
       frutas: [],
-      formError: {
-        identificador: false,
-        categoria: false,
-        marca: false,
-        modelo: false,
-        ubicacion: false,
-        fechaAlta: false,
-      },
       categorias: {},
       nombreCategorias: [],
       tabSeleccionada: "dispositivos",
@@ -249,10 +349,18 @@ export default {
         ubicacion: "",
         fechaAlta: "",
       },
+      formCategoria: {
+        categoria: "",
+        proposito: "",
+        updatetime: "",
+      },
       dateContext: null,
     };
   },
   methods: {
+    idCategoriaToggle(id){
+      return "a" + id;
+    },
     seleccionarFruta(fruta) {
       for (var i = 0; i < this.frutas.length; i++) {
         if (
@@ -288,8 +396,17 @@ export default {
         this.fetchSensores(dispositivo.identificador);
       }
     },
+    makeDisplay(newDisplay) {
+      this.display = newDisplay;
+    },
     displayForm() {
       this.formulario = !this.formulario;
+    },
+    displayCategorias() {
+      this.listCategorias = !this.listCategorias;
+    },
+    displayNuevaCategoria() {
+      this.nuevaCategoria = !this.nuevaCategoria;
     },
     onReset(evt) {
       this.form.categoria = "";
@@ -304,6 +421,11 @@ export default {
         this.formulario = true;
       });
     },
+    onResetCategoria(evt) {
+      this.formCategoria.categoria = "";
+      this.formCategoria.updatetime = "";
+      this.formCategoria.proposito = "";
+    },
     checkForm: function (e) {
       e.preventDefault();
       let errorIdentificador = false;
@@ -317,24 +439,27 @@ export default {
           this.form.categoria = categoria;
         }
       });
-      this.formError.identificador = errorIdentificador;
       if (!errorIdentificador) {
         this.sendDispositivo();
         console.log("Un exito muchachin");
-        console.log(
-          this.endpointCrearDispositivo +
-            this.form.ubicacion +
-            "/" +
-            this.form.fechaAlta +
-            "/" +
-            this.form.categoria.id +
-            "/" +
-            this.form.marca +
-            "/" +
-            this.form.modelo +
-            "/" +
-            this.form.identificador
-        );
+        this.makeDisplay("main");
+      } else {
+        console.log("Malardo del mal ingresa bien las cosas");
+      }
+    },
+    checkFormCategoria: function (e) {
+      e.preventDefault();
+      let errorCat = false;
+      this.categorias.map((categoria) => {
+        if (categoria.categoria == this.formCategoria.categoria) {
+          errorCat = true;
+        }
+      });
+      if (!errorCat) {
+        this.sendCategoria();
+        this.makeDisplay("listCategorias");
+        this.onResetCategoria();
+        console.log("Un exito muchachin");
       } else {
         console.log("Malardo del mal ingresa bien las cosas");
       }
@@ -407,6 +532,32 @@ export default {
         );
         console.log("Dispositivo creado... supuestamente");
         this.fetchCustom();
+        this.loaded = true;
+      } catch (e) {
+        console.error("catched! " + e);
+      }
+    },
+    async sendCategoria() {
+      this.loaded = false;
+      try {
+        const response = await fetch(
+          this.endpointCrearCategoria +
+            this.formCategoria.updatetime +
+            "/" +
+            this.formCategoria.categoria +
+            "/" +
+            this.formCategoria.proposito,
+          {
+            method: "POST",
+            mode: "no-cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            redirect: "follow", // manual, *follow, error
+            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          }
+        );
+        console.log("Categoria creada... supuestamente");
+        this.fetchCategorias();
         this.loaded = true;
       } catch (e) {
         console.error("catched! " + e);
