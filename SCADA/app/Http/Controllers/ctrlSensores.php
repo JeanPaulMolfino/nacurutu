@@ -8,7 +8,7 @@ class ctrlSensores extends Controller
 {
     public function get_sensorbytipo($id_tipo)
     {
-        $data = json_encode(DB::select("Select d.id_sensor_secundario as id, d.unidadmedida, d.grafica, d.nombre from dispositivos as d where d.id_tipo=?", [$id_tipo]), JSON_UNESCAPED_UNICODE);
+        $data = json_encode(DB::select("select id, id_tipo, id_sensor_secundario, unidadmedida, nombre, min, max, id_grafica FROM sensores WHERE id_tipo =?", [$id_tipo]), JSON_UNESCAPED_UNICODE);
         return response($data, 200)->header('Content-Type', 'application/json');
     }
 
