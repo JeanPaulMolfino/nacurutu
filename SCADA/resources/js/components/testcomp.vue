@@ -436,7 +436,7 @@ export default {
       endpointCrearDispositivo: "dispositivos/post:insert_dispositivo/",
       endpointCrearCategoria: "tiposdispositivos/post:insert_tipodispositivo/",
       endpointSensoresPorCategoria: "sensores/get:get_sensoresbytipo/",
-      endpointCrearSensor: "sensores/post:insert_sensores/",
+      endpointCrearSensor: "sensores/post:insert_sensore/",
       titulo: "Testeo de Tabs",
       display: "main",
       frutas: [],
@@ -717,7 +717,7 @@ export default {
       }
     },
     getIdSecundario() {
-      return this.sensoresCategoria[this.formSensor.idCategoria].length;
+      return this.sensoresCategoria[this.formSensor.idCategoria].length + 1;
     },
     getSensorMin() {
       return this.formSensor.min != "" ? this.formSensor.min : "null";
