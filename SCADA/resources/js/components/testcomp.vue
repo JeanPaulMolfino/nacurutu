@@ -237,10 +237,9 @@
                   >
                     <b-card>
                       <div
-                        v-for="(sensor, index) in sensoresCategoria[
-                          categoria.id
-                        ]"
+                        v-for="(sensor, index) in sensoresCategoria[categoria.id]"
                         :key="index"
+                        :class="[display === 'listCategorias' ? 'frutasDesechadas' : 'invisible']"
                       >
                         <p class="card-text">
                           {{ sensor.nombre }} - {{ sensor.unidadmedida }}
@@ -754,6 +753,7 @@ export default {
         );
         console.log("Sensor creado... supuestamente");
         this.fetchSensoresPorCategoria(this.formSensor.idCategoria);
+        this.fetchCategorias();
         this.loaded = true;
       } catch (e) {
         console.error("catched! " + e);
