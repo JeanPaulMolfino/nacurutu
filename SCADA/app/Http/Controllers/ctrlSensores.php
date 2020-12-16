@@ -17,11 +17,11 @@ class ctrlSensores extends Controller
     {
         //DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, grafica, nombre) VALUES (?,?,?,?,?))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre]);
         if ($min != "null" && $max == "null") {
-            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre, min) VALUES ('?', '?', '?', '?', '?', '?'))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $min]);
+            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre, min) VALUES (?, ?, '".$unidadmedida."', ?, '".$nombre."', ?)", [$id_tipo, $id_sensor_secundario, $grafica, $min]);
         } else if ($min == "null" && $max != "null") {
-            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre, max) VALUES ('?', '?', '?', '?', '?', '?'))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $max]);
+            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre, max) VALUES (?, ?, '".$unidadmedida."', ?, '".$nombre."', ?)", [$id_tipo, $id_sensor_secundario, $grafica, $max]);
         } else {
-            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre, min, max) VALUES ('?', '?', '?', '?', '?', '?', '?'))", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $min, $max]);
+            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre, min, max) VALUES (?, ?, '".$unidadmedida."', ?, '".$nombre."', ?, ?)", [$id_tipo, $id_sensor_secundario, $grafica, $min, $max]);
         }
 
     }
@@ -34,7 +34,7 @@ class ctrlSensores extends Controller
         if ($max == "null") {
             $max = null;
         }
-        DB::update("update sensores set id_tipo = ?, id_sensor_secundario = ?, unidadmedida = ?, id_grafica = ?, nombre = ?, min=?, max=? where id = ?", [$id_tipo, $id_sensor_secundario, $unidadmedida, $grafica, $nombre, $min, $max, $id]);
+        DB::update("update sensores set id_tipo = ?, id_sensor_secundario = ?, unidadmedida = '".$unidadmedida."', id_grafica = ?, nombre = '".$nombre."', min=?, max=? where id = ?", [$id_tipo, $id_sensor_secundario, $grafica, $min, $max, $id]);
     }
 
     public function get_sensores_alerta()
