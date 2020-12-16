@@ -11,7 +11,7 @@
                 : 'nav-item nav-link',
             ]"
           >
-            <p>Dispositivos</p>
+            <p>Home</p>
           </div>
           <div
             v-for="(dispositivo, index) in frutas"
@@ -236,11 +236,22 @@
                     class="mt-2"
                   >
                     <b-card>
-                      <div v-for="(sensor, index) in sensoresCategoria[categoria.id]" :key="index">
+                      <div
+                        v-for="(sensor, index) in sensoresCategoria[
+                          categoria.id
+                        ]"
+                        :key="index"
+                      >
                         <p class="card-text">
                           {{ sensor.nombre }} - {{ sensor.unidadmedida }}
                         </p>
                       </div>
+                      <button
+                        @click="makeDisplayFormularioSensores(categoria.id)"
+                        class="btn btn-success"
+                      >
+                        NUEVO SENSOR
+                      </button>
                     </b-card>
                   </b-collapse>
                 </p>
@@ -319,6 +330,88 @@
                   </div>
                 </b-form>
               </div>
+
+              <div
+                :class="[display === 'formularioSensores' ? '' : 'invisible']"
+              >
+                <h1>La categoria es: {{ formSensor.idCategoria }}</h1>
+                <b-form @submit="checkFormSensor" @reset="onResetSensor">
+                  <b-form-group
+                    id="input-group-1"
+                    label="Nombre el sensor:"
+                    label-for="input-1"
+                  >
+                    <b-form-input
+                      id="input-1"
+                      v-model="formSensor.nombre"
+                      required
+                      placeholder="Nombre sensor"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-3"
+                    label="Unidad de medida:"
+                    label-for="input-2"
+                  >
+                    <b-form-input
+                      id="input-3"
+                      required
+                      v-model="formSensor.unidadmedida"
+                      placeholder="Unidad de medida"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-1"
+                    label="Minimo:"
+                    label-for="input-3"
+                  >
+                    <b-form-input
+                      id="input-1"
+                      v-model="formSensor.min"
+                      type="number"
+                      placeholder="Minimo"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-1"
+                    label="Maximo:"
+                    label-for="input-4"
+                  >
+                    <b-form-input
+                      id="input-4"
+                      v-model="formSensor.max"
+                      type="number"
+                      placeholder="Maximo"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-1"
+                    label="Grafica:"
+                    label-for="input-5"
+                  >
+                    <b-form-input
+                      id="input-5"
+                      v-model="formSensor.grafica"
+                      required
+                      placeholder="Grafica"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <div class="form-group row">
+                    <b-button type="submit" variant="primary">Crear</b-button>
+                    <b-button type="reset" variant="warning">Resetear</b-button>
+                    <b-button
+                      @click="makeDisplay('listCategorias')"
+                      variant="danger"
+                      >Cancelar</b-button
+                    >
+                  </div>
+                </b-form>
+              </div>
             </div>
           </div>
         </div>
@@ -364,7 +457,7 @@ export default {
         proposito: "",
         updatetime: "",
       },
-      formSensor:{
+      formSensor: {
         idCategoria: "",
         unidadmedida: "",
         grafica: "",
@@ -418,6 +511,10 @@ export default {
     makeDisplay(newDisplay) {
       this.display = newDisplay;
     },
+    makeDisplayFormularioSensores(idCategoria) {
+      this.formSensor.idCategoria = idCategoria;
+      this.display = "formularioSensores";
+    },
     displayForm() {
       this.formulario = !this.formulario;
     },
@@ -444,6 +541,13 @@ export default {
       this.formCategoria.categoria = "";
       this.formCategoria.updatetime = "";
       this.formCategoria.proposito = "";
+    },
+    onResetSensor(evt) {
+      this.formSensor.nombre = "";
+      this.formSensor.max = "";
+      this.formSensor.min = "";
+      this.formSensor.grafica = "";
+      this.formSensor.unidadmedida = "";
     },
     checkForm: function (e) {
       e.preventDefault();
@@ -478,6 +582,23 @@ export default {
         this.sendCategoria();
         this.makeDisplay("listCategorias");
         this.onResetCategoria();
+        console.log("Un exito muchachin");
+      } else {
+        console.log("Malardo del mal ingresa bien las cosas");
+      }
+    },
+    checkFormSensor: function (e) {
+      e.preventDefault();
+      let errorNombre = false;
+      this.sensoresCategoria[this.formSensor.idCategoria].map((sensor) => {
+        if (sensor.nombre === this.formSensor.nombre) {
+          errorNombre = true;
+        }
+      });
+      if (!errorNombre) {
+        this.sendSensor();
+        this.makeDisplay("listCategorias");
+        this.onResetSensor();
         console.log("Un exito muchachin");
       } else {
         console.log("Malardo del mal ingresa bien las cosas");
@@ -595,24 +716,23 @@ export default {
         console.error("catched! " + e);
       }
     },
-  },
-  getIdSecundario(idCategoria){
-    return this.sensoresCategoria[idCategoria].length()
-  },
-  getSensorMin(idCategoria){
-    return this.sensoresCategoria[idCategoria].length()
-  },
-  getSensorMax(idCategoria){
-    return this.sensoresCategoria[idCategoria].length()
-  },
-  async sendSensor() {
+    getIdSecundario() {
+      return this.sensoresCategoria[this.formSensor.idCategoria].length;
+    },
+    getSensorMin() {
+      return this.formSensor.min != "" ? this.formSensor.min : "null";
+    },
+    getSensorMax() {
+      return this.formSensor.max != "" ? this.formSensor.max : "null";
+    },
+    async sendSensor() {
       this.loaded = false;
       try {
         const response = await fetch(
           this.endpointCrearSensor +
             this.formSensor.idCategoria +
             "/" +
-            this.getIdSecundario(this.formSensor.idCategoria) +
+            this.getIdSecundario() +
             "/" +
             this.formSensor.unidadmedida +
             "/" +
@@ -620,9 +740,9 @@ export default {
             "/" +
             this.formSensor.nombre +
             "/" +
-            this.formSensor.min +
+            this.getSensorMin() +
             "/" +
-            this.formSensor.max,
+            this.getSensorMax(),
           {
             method: "POST",
             mode: "no-cors", // no-cors, *cors, same-origin
@@ -632,13 +752,15 @@ export default {
             referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
           }
         );
-        console.log("Sensor creada... supuestamente");
+        console.log("Sensor creado... supuestamente");
         this.fetchSensoresPorCategoria(this.formSensor.idCategoria);
         this.loaded = true;
       } catch (e) {
         console.error("catched! " + e);
       }
     },
+  },
+
   mounted() {
     const asyncInterval = async (callback, ms, triesLeft = 2) => {
       return new Promise((resolve, reject) => {
