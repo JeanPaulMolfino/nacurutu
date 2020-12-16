@@ -71,4 +71,4 @@ Route::post('sensores/post:insert_sensore/{id_tipo}/{id_sensor_secundario}/{unid
 Route::put('sensores/put:update_sensores/{id}/{id_tipo}/{id_sensor_secundario}/{unidadmedida}/{grafica}/{nombre}/{min}/{max}', [ctrlSensores::class, "update_sensor"]);
 Route::get('sensores/get:get_sensoresalerta/', [ctrlSensores::class, "get_sensores_alerta"]);
 
-Route::get('sensores/get:get_graficas/', [ctrlSensores::class, "get_graficas"]);
+Route::get('graficas/get:get_graficas/', [ctrlSensores::class, "get_graficas"]);
