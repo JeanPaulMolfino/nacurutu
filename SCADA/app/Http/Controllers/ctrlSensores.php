@@ -20,8 +20,10 @@ class ctrlSensores extends Controller
             DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre, min) VALUES (?, ?, '".$unidadmedida."', ?, '".$nombre."', ?)", [$id_tipo, $id_sensor_secundario, $grafica, $min]);
         } else if ($min == "null" && $max != "null") {
             DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre, max) VALUES (?, ?, '".$unidadmedida."', ?, '".$nombre."', ?)", [$id_tipo, $id_sensor_secundario, $grafica, $max]);
-        } else {
+        } else if($min == "null" && $max == "null"){
             DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre) VALUES (?, ?, '".$unidadmedida."', ?, '".$nombre."')", [$id_tipo, $id_sensor_secundario, $grafica]);
+        }else {
+            DB::insert("insert into sensores (id_tipo, id_sensor_secundario, unidadmedida, id_grafica, nombre, min, max) VALUES (?, ?, '".$unidadmedida."', ?, '".$nombre."', ?, ?)", [$id_tipo, $id_sensor_secundario, $grafica, $min, $max]);
         }
 
     }
