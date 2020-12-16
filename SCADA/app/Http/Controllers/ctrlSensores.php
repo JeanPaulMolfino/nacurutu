@@ -43,6 +43,12 @@ class ctrlSensores extends Controller
         return response($data, 200)->header('Content-Type', 'application/json');
     }
 
+    public function get_graficas()
+    {
+        $data = json_encode(DB::select("select * from graficas"), JSON_UNESCAPED_UNICODE);
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+
     //ToDo unnecessary
     /*public function baja_sensor($identificador)
 {
