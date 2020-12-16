@@ -40,7 +40,7 @@ class getdata extends Command
     {
         //Con esto pretendo que me traiga todos los id de dispositivos que tengan tareas pendientes en conjunto a su ultima medicion
         // o aquellos que ya halla excedido el tiempo de actualizacion desde que se les hizo update
-        $dispositivos = DB::select("select d.id, d.identificador, DATE_FORMAT(d.ultima_actualizacion,'%Y-%m-%d-%H-%i-%S') as ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as t where d.id_tipo = t.id and d.actividad = 1 and (DATE_ADD(d.ultima_actualizacion, INTERVAL t.updatetime MINUTE) < NOW())");
+        $dispositivos = DB::select("select d.id, d.identificador, d.id_tipo,DATE_FORMAT(d.ultima_actualizacion,'%Y-%m-%d-%H-%i-%S') as ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as t where d.id_tipo = t.id and d.actividad = 1 and (DATE_ADD(d.ultima_actualizacion, INTERVAL t.updatetime MINUTE) < NOW())");
         var_dump($dispositivos);
         //itero sobre cada uno de los dispositivos
         foreach ($dispositivos as $dispositivo) {
@@ -75,9 +75,10 @@ class getdata extends Command
 
                     //Y por cada dato
                     $index = 1;
+                    $sensores = DB::select('select id_sensor_secundario as id from sensores where id_tipo=?',[$dispositivo->id_tipo]);
                     while($index < $cantidad){
                         //Lo inserto en la base de datos
-                        DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$datos[0], $datos[$index], $dispositivo->id, $index]);
+                        DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$datos[0], $datos[$index], $dispositivo->id, $sensores[$index-1]->id]);
                         $index++;
                     }
                     //Voy sobre escribiendo la ultima actualizacion
