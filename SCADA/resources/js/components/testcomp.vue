@@ -237,13 +237,36 @@
                   >
                     <b-card>
                       <div
-                        v-for="(sensor, index) in sensoresCategoria[categoria.id]"
+                        v-for="(sensor, index) in sensoresCategoria[
+                          categoria.id
+                        ]"
                         :key="index"
-                        :class="[display === 'listCategorias' ? 'frutasDesechadas' : 'invisible']"
+                        :class="[
+                          display === 'listCategorias'
+                            ? 'frutasDesechadas'
+                            : 'invisible',
+                        ]"
                       >
-                        <p class="card-text">
-                          {{ sensor.nombre }} - {{ sensor.unidadmedida }}
-                        </p>
+                        <button
+                          @click="makeDisplayEditarSensor(categoria.id, sensor)"
+                          class="btn btn-warning"
+                        >
+                          <p class="card-text">
+                            {{ sensor.nombre }} - {{ sensor.unidadmedida }}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="black"
+                              width="36px"
+                              height="36px"
+                            >
+                              <path d="M0 0h24v24H0V0z" fill="none" />
+                              <path
+                                d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1c-.1.1-.15.22-.15.36zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                              />
+                            </svg>
+                          </p>
+                        </button>
                       </div>
                       <button
                         @click="makeDisplayFormularioSensores(categoria.id)"
@@ -411,6 +434,93 @@
                   </div>
                 </b-form>
               </div>
+
+              <div
+                :class="[
+                  display === 'formularioEditarSensores' ? '' : 'invisible',
+                ]"
+              >
+                <h1>
+                  Edite los datos que corresponda y precione el boton ACEPTAR
+                </h1>
+                <b-form
+                  @submit="checkEditarSensor"
+                >
+                  <b-form-group
+                    id="input-group-1"
+                    label="Nombre el sensor:"
+                    label-for="input-1"
+                  >
+                    <b-form-input
+                      id="input-1"
+                      v-model="updateSensor.nombre"
+                      required
+                      placeholder="Nombre sensor"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-3"
+                    label="Unidad de medida:"
+                    label-for="input-2"
+                  >
+                    <b-form-input
+                      id="input-3"
+                      required
+                      v-model="updateSensor.unidadmedida"
+                      placeholder="Unidad de medida"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-1"
+                    label="Minimo:"
+                    label-for="input-3"
+                  >
+                    <b-form-input
+                      id="input-1"
+                      v-model="updateSensor.min"
+                      type="number"
+                      placeholder="Minimo"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-1"
+                    label="Maximo:"
+                    label-for="input-4"
+                  >
+                    <b-form-input
+                      id="input-4"
+                      v-model="updateSensor.max"
+                      type="number"
+                      placeholder="Maximo"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-1"
+                    label="Grafica:"
+                    label-for="input-5"
+                  >
+                    <b-form-input
+                      id="input-5"
+                      v-model="updateSensor.id_grafica"
+                      required
+                      placeholder="Grafica"
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <div class="form-group row">
+                    <b-button type="submit" variant="primary">ACEPTAR</b-button>
+                    <b-button
+                      @click="makeDisplay('listCategorias')"
+                      variant="danger"
+                      >CANCELAR</b-button
+                    >
+                  </div>
+                </b-form>
+              </div>
             </div>
           </div>
         </div>
@@ -436,6 +546,7 @@ export default {
       endpointCrearCategoria: "tiposdispositivos/post:insert_tipodispositivo/",
       endpointSensoresPorCategoria: "sensores/get:get_sensoresbytipo/",
       endpointCrearSensor: "sensores/post:insert_sensore/",
+      endpointUpdateSensor: "sensores/put:update_sensores/",
       titulo: "Testeo de Tabs",
       display: "main",
       frutas: [],
@@ -463,6 +574,16 @@ export default {
         nombre: "",
         min: "",
         max: "",
+      },
+      updateSensor: {
+        idCategoria: "",
+        id: "",
+        id_sensor_secundario: "",
+        id_grafica: "",
+        max: "",
+        min: "",
+        nombre: "",
+        unidadmedida: "",
       },
       dateContext: null,
     };
@@ -514,14 +635,16 @@ export default {
       this.formSensor.idCategoria = idCategoria;
       this.display = "formularioSensores";
     },
-    displayForm() {
-      this.formulario = !this.formulario;
-    },
-    displayCategorias() {
-      this.listCategorias = !this.listCategorias;
-    },
-    displayNuevaCategoria() {
-      this.nuevaCategoria = !this.nuevaCategoria;
+    makeDisplayEditarSensor(idCategoria, sensor) {
+      this.updateSensor.id = sensor.id;
+      this.updateSensor.id_sensor_secundario = sensor.id_sensor_secundario;
+      this.updateSensor.idCategoria = idCategoria;
+      this.updateSensor.id_grafica = sensor.id_grafica;
+      this.updateSensor.max = sensor.max;
+      this.updateSensor.min = sensor.min;
+      this.updateSensor.nombre = sensor.nombre;
+      this.updateSensor.unidadmedida = sensor.unidadmedida;
+      this.display = "formularioEditarSensores";
     },
     onReset(evt) {
       this.form.categoria = "";
@@ -603,6 +726,22 @@ export default {
         console.log("Malardo del mal ingresa bien las cosas");
       }
     },
+    checkEditarSensor: function (e) {
+      e.preventDefault();
+      let errorNombre = false;
+      this.sensoresCategoria[this.updateSensor.idCategoria].map((sensor) => {
+        if (sensor.nombre === this.updateSensor.nombre) {
+          errorNombre = true;
+        }
+      });
+      if (!errorNombre) {
+        this.updapearSensor();
+        this.makeDisplay("listCategorias");
+        console.log("Un exito muchachin");
+      } else {
+        console.log("Malardo del mal ingresa bien las cosas");
+      }
+    },
     onContext(ctx) {
       this.dateContext = ctx;
     },
@@ -662,17 +801,17 @@ export default {
       try {
         const response = await fetch(
           this.endpointCrearDispositivo +
-            this.form.ubicacion +
+            this.remplazar(this.form.ubicacion) +
             "/" +
             this.form.fechaAlta +
             "/" +
             this.form.categoria.id +
             "/" +
-            this.form.marca +
+            this.remplazar(this.form.marca) +
             "/" +
-            this.form.modelo +
+            this.remplazar(this.form.modelo) +
             "/" +
-            this.form.identificador,
+            this.remplazar(this.form.identificador),
           {
             method: "POST",
             mode: "no-cors", // no-cors, *cors, same-origin
@@ -696,9 +835,9 @@ export default {
           this.endpointCrearCategoria +
             this.formCategoria.updatetime +
             "/" +
-            this.formCategoria.categoria +
+            this.remplazar(this.formCategoria.categoria) +
             "/" +
-            this.formCategoria.proposito,
+            this.remplazar(this.formCategoria.proposito),
           {
             method: "POST",
             mode: "no-cors", // no-cors, *cors, same-origin
@@ -724,6 +863,12 @@ export default {
     getSensorMax() {
       return this.formSensor.max != "" ? this.formSensor.max : "null";
     },
+    getSensorUpdateMin() {
+      return this.formSensor.min != "" ? this.formSensor.min : "null";
+    },
+    getSensorUpdateMax() {
+      return this.formSensor.max != "" ? this.formSensor.max : "null";
+    },
     async sendSensor() {
       this.loaded = false;
       try {
@@ -733,11 +878,11 @@ export default {
             "/" +
             this.getIdSecundario() +
             "/" +
-            this.formSensor.unidadmedida +
+            this.remplazar(this.formSensor.unidadmedida) +
             "/" +
             this.formSensor.grafica +
             "/" +
-            this.formSensor.nombre +
+            this.remplazar(this.formSensor.nombre) +
             "/" +
             this.getSensorMin() +
             "/" +
@@ -758,6 +903,48 @@ export default {
       } catch (e) {
         console.error("catched! " + e);
       }
+    },
+
+    async updapearSensor() {
+      this.loaded = false;
+      try {
+        const response = await fetch(
+          this.endpointUpdateSensor +
+            this.updateSensor.id +
+            "/" +
+            this.updateSensor.idCategoria +
+            "/" +
+            this.updateSensor.id_sensor_secundario +
+            "/" +
+            this.remplazar(this.updateSensor.unidadmedida) +
+            "/" +
+            this.updateSensor.id_grafica +
+            "/" +
+            this.remplazar(this.updateSensor.nombre) +
+            "/" +
+            this.getSensorUpdateMin() +
+            "/" +
+            this.getSensorUpdateMax(),
+          {
+            method: "PUT",
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            redirect: "follow", // manual, *follow, error
+            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          }
+        );
+        console.log("Sensor updapeado... supuestamente");
+        this.fetchSensoresPorCategoria(this.updateSensor.idCategoria);
+        this.fetchCategorias();
+        this.loaded = true;
+      } catch (e) {
+        console.error("catched! " + e);
+      }
+    },
+
+    remplazar(palabra) {
+      return palabra.replace(" ", "%20");
     },
   },
 
