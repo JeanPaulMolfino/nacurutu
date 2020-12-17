@@ -51,7 +51,7 @@ class getdata extends Command
             //$fecha[16] = "-";
             var_dump($dispositivo);
             //Obtengo la informacion nueva del $dispositivo
-            $data = file_get_contents('http://127.0.0.1:8000/dummyDevice?ID_DEV='.$dispositivo->identificador.'&MODE=SINCE&T='.$dispositivo->ultima_actualizacion);
+            $data = file_get_contents('http://127.0.0.1:8000/dummyDevice?ID_DEV=' . $dispositivo->identificador . '&MODE=SINCE&T=' . $dispositivo->ultima_actualizacion);
 
             //Si no es vacio
             if ($data != '') {
@@ -60,12 +60,12 @@ class getdata extends Command
                 array_shift($lineas);
                 //Aquí voy a guardar la ultima fecha de los registros
                 $ultimaactualizacion = "";
-                if(end($lineas) == ""){
+                if (end($lineas) == "") {
                     array_pop($lineas);
                 }
                 //var_dump($lineas);
                 //Por cada linea
-                foreach($lineas as $linea){
+                foreach ($lineas as $linea) {
 
                     //Separo cada lectura y su fecha
                     $datos = explode("; ", $linea);
@@ -75,10 +75,10 @@ class getdata extends Command
 
                     //Y por cada dato
                     $index = 1;
-                    $sensores = DB::select('select id_sensor_secundario as id from sensores where id_tipo=?',[$dispositivo->id_tipo]);
-                    while($index < $cantidad){
+                    $sensores = DB::select('select id_sensor_secundario as id from sensores where id_tipo=?', [$dispositivo->id_tipo]);
+                    while ($index < $cantidad) {
                         //Lo inserto en la base de datos
-                        DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$datos[0], $datos[$index], $dispositivo->id, $sensores[$index-1]->id]);
+                        DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$datos[0], $datos[$index], $dispositivo->id, $sensores[$index - 1]->id]);
                         $index++;
                     }
                     //Voy sobre escribiendo la ultima actualizacion
@@ -91,7 +91,7 @@ class getdata extends Command
                 var_dump($ultimaactualizacion);*/
                 //Una ves que termino de insertar todas, actualizo la fecha de su ultima lectura
                 DB::update('update dispositivos set ultima_actualizacion = ? where id = ?', [$ultimaactualizacion, $dispositivo->id]);
-                
+
             }
         }
 
