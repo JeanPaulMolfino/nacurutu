@@ -50,11 +50,11 @@ export default {
         },
         dateTo: {
             type: String,
-            default: `2021-01-01`
+            default: `2099-01-01`
         },
         endpoint: {
             type: String,
-            default: `http://127.0.0.1:8000/endpoints/get:medidasbydispositivo/`
+            default: `/endpoints/get:medidasbydispositivo/`
         }
     },
     mounted() {

@@ -75,6 +75,70 @@
                   {{ sensor.unidadmedida }}
                 </p>
               </div>
+
+              <div>
+                <b-form @submit="displayGrafica">
+                  <b-form-group
+                    id="input-group-6"
+                    label="Tipo de grafica:"
+                    label-for="input-6"
+                  >
+                    <b-form-select
+                      id="input-2"
+                      v-model="formGrafica.nombreGrafica"
+                      :options="nombreGraficas"
+                      required
+                    ></b-form-select>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-6"
+                    label="Desde:"
+                    label-for="input-6"
+                  >
+                    <b-calendar
+                      id="input-6"
+                      v-model="formGrafica.from"
+                      block
+                      @context="onContext"
+                      locale="en-US"
+                      selected-variant="success"
+                      today-variant="info"
+                      nav-button-variant="primary"
+                    ></b-calendar>
+                  </b-form-group>
+
+                  <b-form-group
+                    id="input-group-6"
+                    label="Hasta:"
+                    label-for="input-6"
+                  >
+                    <b-calendar
+                      id="input-6"
+                      v-model="formGrafica.to"
+                      block
+                      @context="onContext"
+                      locale="en-US"
+                      selected-variant="success"
+                      today-variant="info"
+                      nav-button-variant="primary"
+                    ></b-calendar>
+                  </b-form-group>
+
+                  <b-button variant="primary" size="sm" type="submit"
+                    >OK</b-button
+                  >
+                </b-form>
+
+                <chartchooser
+                  v-if="displayGraph"
+                  :deviceIdentificator="dispositivo.identificador"
+                  :sensorIdSecondary="'1'"
+                  :sensorGraphId="1"
+                  :dateFrom="formGrafica.from"
+                  :dateTo="formGrafica.to"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -443,9 +507,7 @@
                 <h1>
                   Edite los datos que corresponda y precione el boton ACEPTAR
                 </h1>
-                <b-form
-                  @submit="checkEditarSensor"
-                >
+                <b-form @submit="checkEditarSensor">
                   <b-form-group
                     id="input-group-1"
                     label="Nombre el sensor:"
@@ -530,9 +592,14 @@
 </template>
 
 <script>
+import chartchooser from "./ChartChooser";
+
 export default {
   expand: false,
   props: {},
+  components: {
+    chartchooser,
+  },
   data() {
     return {
       loaded: false,
@@ -548,6 +615,7 @@ export default {
       endpointCrearSensor: "sensores/post:insert_sensore/",
       endpointUpdateSensor: "sensores/put:update_sensores/",
       titulo: "Testeo de Tabs",
+      nombreGraficas: ["Linea", "Puntos", "Barra", "Pene"],
       display: "main",
       frutas: [],
       categorias: {},
@@ -585,10 +653,20 @@ export default {
         nombre: "",
         unidadmedida: "",
       },
+      formGrafica: {
+        from: "",
+        to: "",
+        nombreGrafica: "",
+      },
+      displayGraph: false,
       dateContext: null,
     };
   },
   methods: {
+    displayGrafica(e) {
+      e.preventDefault();
+      this.displayGraph = true;
+    },
     idCategoriaToggle(id) {
       this.fetchSensoresPorCategoria(id);
       return "a" + id;
