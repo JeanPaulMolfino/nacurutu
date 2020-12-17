@@ -28,9 +28,9 @@ window.Vue = require('vue');
 /**
  * Registro Manual Global de los componenetes.
 */
-
 Vue.component('chartradarstandalone', require('./components/ChartRadarStandalone.vue').default);
 Vue.component('chartlinestandalone', require('./components/ChartLineStandalone.vue').default);
+Vue.component('chartchooser', require('./components/ChartChooser.vue').default);
 Vue.component('chartlinecontainer', require('./components/ChartLineContainer.vue').default);
 Vue.component('chartline', require('./components/ChartLine.vue').default);
 
