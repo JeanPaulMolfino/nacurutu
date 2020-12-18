@@ -7,8 +7,14 @@
             v-model="showDismissibleAlert[alerta.identificador]"
             variant="danger"
             dismissible
+            style="overflow: hidden"
           >
             {{ alerta.identificador }}
+            <iframe src="https://s3-eu-west-1.amazonaws.com/omegasquadron.neilbryson.net/silence.mp3" allow="autoplay" id="audio" style="position: absolute; z-index: -999"></iframe>
+            <audio ref="player" controls autoplay style="position: absolute; z-index: -999">
+              <source src="https://drive.google.com/file/d/1pNkiPXhbz8KDjB012-DqtCIjY_Vl4UVQ/view?usp=sharing" />
+              Your browser does not support the audio element.
+            </audio>
           </b-alert>
         </div>
 
@@ -677,8 +683,7 @@ export default {
       sensoresTabSeleccionada: "",
       tiposDeGraficas: [],
       tiposDeGraficasNombre: [],
-      showDismissibleAlert: {
-      },
+      showDismissibleAlert: {},
       sensoresEnAlerta: [],
     };
   },
@@ -1080,9 +1085,8 @@ export default {
       return palabra.replace(" ", "%20");
     },
 
-    async loopAlerta(){
-      while(true){
-        var aux = {};
+    async loopAlerta() {
+      var aux = {};
       try {
         const response = await fetch(this.endpointAlertas);
         const myJson = await response.json();
@@ -1094,8 +1098,6 @@ export default {
         this.loaded = true;
       } catch (e) {
         console.error("catched! " + e);
-      }
-      
       }
     },
   },
@@ -1146,7 +1148,7 @@ export default {
     asyncCategorias();
     asyncInterval();
     asyncGraficas();
-    setTimeout(() => this.loopAlerta(), 600000);
+    setInterval(() => this.loopAlerta(), 60000);
     console.log("Fetched");
   },
 };
