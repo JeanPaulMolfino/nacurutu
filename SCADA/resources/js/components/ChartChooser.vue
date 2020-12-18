@@ -1,7 +1,7 @@
 <template>
     <div class="chartchoosercontainer">
         <chartlinestandalone
-            v-if="renderLine"
+            v-if="sensorGraphId == 1"
             :deviceIdentificator="deviceIdentificator"
             :sensorIdSecondary="sensorIdSecondary"
             :dateFrom="dateFrom"
@@ -9,7 +9,7 @@
             :endpoint="endpoint"
         />
         <chartradarstandalone
-            v-if="renderRadar"
+            v-if="sensorGraphId == 3"
             :deviceIdentificator="deviceIdentificator"
             :sensorIdSecondary="sensorIdSecondary"
             :dateFrom="dateFrom"
@@ -26,11 +26,11 @@ export default {
             `Component ${this.$options.name} beforCreate hook has been called.`
         );
     },
-    data: () => ({
+    /*data: () => ({
         renderLine: false,
         renderBar: false,
         renderRadar: false
-    }),
+    }),*/
     props: {
         deviceIdentificator: {
             type: String,
@@ -56,25 +56,31 @@ export default {
             type: String,
             default: `/endpoints/get:medidasbydispositivo/`
         }
+	},
+	methods: {
+		/*
+      forceRerender() {
+        this.renderLine = false;
+        this.renderBar = false;
+        this.renderRadar = false;
+
+        this.$nextTick(() => {
+		  this.renderComponent = true;
+		   if (1 != 1) {
+                console.log(`:D`);
+            } else if (this.sensorGraphId == 1) {
+                this.renderLine = true;
+            } else if (this.sensorGraphId == 2) {
+                this.renderBar = true;
+            } else if (this.sensorGraphId == 5) {
+                this.renderRadar = true;
+            } else {
+                console.log(`Tipo de gráfica desconocido.`);
+			}
+        });
+      }*/
     },
     mounted() {
-        if (1 != 1 ) {
-            console.log(`:D`);
-        } else if (this.sensorGraphId == 1) {
-            this.renderLine = true;
-            this.renderBar = false;
-            this.renderRadar = false;
-        } else if (this.sensorGraphId == 2) {
-            this.renderLine = false;
-            this.renderBar = true;
-            this.renderRadar = false;
-        } else if (this.sensorGraphId == 5) {
-            this.renderLine = false;
-            this.renderBar = false;
-            this.renderRadar = true;
-        } else {
-            console.log(`Tipo de gráfica desconocido.`);
-        }
         console.log(`Component ${this.$options.name} mounted!.`);
     }
 };
