@@ -80,13 +80,14 @@
                 <b-form @submit="displayGrafica">
                   <b-form-group
                     id="input-group-6"
-                    label="Tipo de grafica:"
+                    label="Sensor:"
                     label-for="input-6"
                   >
+                    <!-- En options van los nombrs de los sensores -->
                     <b-form-select
                       id="input-2"
-                      v-model="formGrafica.nombreGrafica"
-                      :options="nombreGraficas"
+                      v-model="formGrafica.sensor"
+                      :options="sensoresTabSeleccionada"
                       required
                     ></b-form-select>
                   </b-form-group>
@@ -133,8 +134,8 @@
                 <chartchooser
                   v-if="displayGraph"
                   :deviceIdentificator="dispositivo.identificador"
-                  :sensorIdSecondary="'1'"
-                  :sensorGraphId="1"
+                  :sensorIdSecondary="sensorIdSecondaryChart"
+                  :sensorGraphId="sensorGraphIdChart"
                   :dateFrom="formGrafica.from"
                   :dateTo="formGrafica.to"
                 />
@@ -475,16 +476,16 @@
                   </b-form-group>
 
                   <b-form-group
-                    id="input-group-1"
+                    id="input-group-7"
                     label="Grafica:"
-                    label-for="input-5"
+                    label-for="input-7"
                   >
-                    <b-form-input
-                      id="input-5"
+                    <b-form-select
+                      id="input-2"
                       v-model="formSensor.grafica"
+                      :options="tiposDeGraficasNombre"
                       required
-                      placeholder="Grafica"
-                    ></b-form-input>
+                    ></b-form-select>
                   </b-form-group>
 
                   <div class="form-group row">
@@ -614,8 +615,8 @@ export default {
       endpointSensoresPorCategoria: "sensores/get:get_sensoresbytipo/",
       endpointCrearSensor: "sensores/post:insert_sensore/",
       endpointUpdateSensor: "sensores/put:update_sensores/",
+      endpointGraficas: "graficas/get:get_graficas/",
       titulo: "Testeo de Tabs",
-      nombreGraficas: ["Linea", "Puntos", "Barra", "Pene"],
       display: "main",
       frutas: [],
       categorias: {},
@@ -656,15 +657,27 @@ export default {
       formGrafica: {
         from: "",
         to: "",
-        nombreGrafica: "",
+        sensor: "",
       },
       displayGraph: false,
       dateContext: null,
+      sensorIdSecondaryChart: "",
+      sensorGraphIdChart: "",
+      sensoresTabSeleccionada: "",
+      tiposDeGraficas: [],
+      tiposDeGraficasNombre: [],
     };
   },
   methods: {
     displayGrafica(e) {
       e.preventDefault();
+      this.sensores[this.tabSeleccionada].map((sensor, index) => {
+        if (sensor.nombre == this.formGrafica.sensor) {
+          this.sensorIdSecondaryChart = sensor.grafica;
+          this.sensorGraphIdChart = sensor.secundario;
+        }
+      });
+
       this.displayGraph = true;
     },
     idCategoriaToggle(id) {
@@ -678,6 +691,13 @@ export default {
           fruta === "dispositivos"
         ) {
           this.tabSeleccionada = fruta;
+          if (fruta != "dispositivos") {
+            this.sensoresTabSeleccionada = this.sensores[
+              this.tabSeleccionada
+            ].map((nombreSensor, index) => {
+              return nombreSensor.nombre;
+            });
+          }
         }
       }
     },
@@ -796,6 +816,11 @@ export default {
         }
       });
       if (!errorNombre) {
+        this.formSensor.grafica = this.tiposDeGraficas.map((grafica) => {
+          if (grafica.nombre === this.formSensor.grafica) {
+            this.formSensor.grafica = grafica.id;
+          }
+        });
         this.sendSensor();
         this.makeDisplay("listCategorias");
         this.onResetSensor();
@@ -869,6 +894,22 @@ export default {
         const response = await fetch(this.endpointSensores + dispositivo);
         const myJson = await response.json();
         this.sensores[dispositivo] = myJson;
+        this.loaded = true;
+      } catch (e) {
+        console.error("catched! " + e);
+      }
+    },
+    async fetchGraficas() {
+      var aux = [];
+      this.loaded = false;
+      try {
+        const response = await fetch(this.endpointGraficas);
+        const myJson = await response.json();
+        this.tiposDeGraficas = myJson;
+        this.tiposDeGraficas.forEach((grafica) => {
+          aux.push(grafica.nombre)
+        })
+        this.tiposDeGraficasNombre = aux;
         this.loaded = true;
       } catch (e) {
         console.error("catched! " + e);
@@ -1055,8 +1096,23 @@ export default {
         }, 1000);
       });
     };
+    const asyncGraficas = async (callback, ms, triesLeft = 2) => {
+      return new Promise((resolve, reject) => {
+        const interval = setInterval(async () => {
+          if (await this.fetchGraficas()) {
+            resolve();
+            clearInterval(interval);
+          } else if (triesLeft <= 1) {
+            reject();
+            clearInterval(interval);
+          }
+          triesLeft--;
+        }, 1000);
+      });
+    };
     asyncCategorias();
     asyncInterval();
+    asyncGraficas();
     console.log("Fetched");
   },
 };
