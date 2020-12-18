@@ -2,6 +2,16 @@
   <div id="container">
     <div class="contentContainerContainer">
       <div class="contentContainer">
+        <div v-for="(alerta, index) in sensoresEnAlerta" :key="index">
+          <b-alert
+            v-model="showDismissibleAlert[alerta.identificador]"
+            variant="danger"
+            dismissible
+          >
+            {{ alerta.identificador }}
+          </b-alert>
+        </div>
+
         <div class="nav nav-pills nav-justified">
           <div
             @click="seleccionarFruta('dispositivos')"
@@ -134,7 +144,7 @@
                 <chartchooser
                   v-if="displayGraph"
                   :deviceIdentificator="dispositivo.identificador"
-                  :sensorIdSecondary="sensorIdSecondaryChart"
+                  :sensorIdSecondary="sensorIdSecondaryChart.toString()"
                   :sensorGraphId="sensorGraphIdChart"
                   :dateFrom="formGrafica.from"
                   :dateTo="formGrafica.to"
@@ -616,6 +626,7 @@ export default {
       endpointCrearSensor: "sensores/post:insert_sensore/",
       endpointUpdateSensor: "sensores/put:update_sensores/",
       endpointGraficas: "graficas/get:get_graficas/",
+      endpointAlertas: "sensores/get:get_sensoresalerta/",
       titulo: "Testeo de Tabs",
       display: "main",
       frutas: [],
@@ -666,6 +677,9 @@ export default {
       sensoresTabSeleccionada: "",
       tiposDeGraficas: [],
       tiposDeGraficasNombre: [],
+      showDismissibleAlert: {
+      },
+      sensoresEnAlerta: [],
     };
   },
   methods: {
@@ -673,8 +687,8 @@ export default {
       e.preventDefault();
       this.sensores[this.tabSeleccionada].map((sensor, index) => {
         if (sensor.nombre == this.formGrafica.sensor) {
-          this.sensorIdSecondaryChart = sensor.grafica;
-          this.sensorGraphIdChart = sensor.secundario;
+          this.sensorIdSecondaryChart = sensor.secundario;
+          this.sensorGraphIdChart = sensor.grafica;
         }
       });
 
@@ -907,8 +921,8 @@ export default {
         const myJson = await response.json();
         this.tiposDeGraficas = myJson;
         this.tiposDeGraficas.forEach((grafica) => {
-          aux.push(grafica.nombre)
-        })
+          aux.push(grafica.nombre);
+        });
         this.tiposDeGraficasNombre = aux;
         this.loaded = true;
       } catch (e) {
@@ -1065,6 +1079,25 @@ export default {
     remplazar(palabra) {
       return palabra.replace(" ", "%20");
     },
+
+    async loopAlerta(){
+      while(true){
+        var aux = {};
+      try {
+        const response = await fetch(this.endpointAlertas);
+        const myJson = await response.json();
+        this.sensoresEnAlerta = myJson;
+        this.sensoresEnAlerta.forEach((alerta) => {
+          aux[alerta.identificador] = true;
+        });
+        this.showDismissibleAlert = aux;
+        this.loaded = true;
+      } catch (e) {
+        console.error("catched! " + e);
+      }
+      
+      }
+    },
   },
 
   mounted() {
@@ -1113,6 +1146,7 @@ export default {
     asyncCategorias();
     asyncInterval();
     asyncGraficas();
+    setTimeout(() => this.loopAlerta(), 600000);
     console.log("Fetched");
   },
 };

@@ -68,7 +68,7 @@ export default {
             this.renderLine = false;
             this.renderBar = true;
             this.renderRadar = false;
-        } else if (this.sensorGraphId == 3) {
+        } else if (this.sensorGraphId == 5) {
             this.renderLine = false;
             this.renderBar = false;
             this.renderRadar = true;

@@ -2,7 +2,7 @@
 import { Radar } from "vue-chartjs";
 
 export default {
-    name: "chartlinestandalone",
+    name: "chartradarstandalone",
     extends: Radar,
     props: {
         deviceIdentificator: {
