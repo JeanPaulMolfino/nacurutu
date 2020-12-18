@@ -9,7 +9,7 @@
             :endpoint="endpoint"
         />
         <chartradarstandalone
-            v-if="sensorGraphId == 3"
+            v-if="sensorGraphId == 5"
             :deviceIdentificator="deviceIdentificator"
             :sensorIdSecondary="sensorIdSecondary"
             :dateFrom="dateFrom"
