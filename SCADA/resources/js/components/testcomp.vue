@@ -10,9 +10,21 @@
             style="overflow: hidden"
           >
             {{ alerta.identificador }}
-            <iframe src="https://s3-eu-west-1.amazonaws.com/omegasquadron.neilbryson.net/silence.mp3" allow="autoplay" id="audio" style="position: absolute; z-index: -999"></iframe>
-            <audio ref="player" controls autoplay style="position: absolute; z-index: -999">
-              <source src="https://drive.google.com/file/d/1pNkiPXhbz8KDjB012-DqtCIjY_Vl4UVQ/view?usp=sharing" />
+            <iframe
+              src="https://s3-eu-west-1.amazonaws.com/omegasquadron.neilbryson.net/silence.mp3"
+              allow="autoplay"
+              id="audio"
+              style="position: absolute; z-index: -999"
+            ></iframe>
+            <audio
+              ref="player"
+              controls
+              autoplay
+              style="position: absolute; z-index: -999"
+            >
+              <source
+                src="http://soundbible.com/mp3/sms-alert-4-daniel_simon.mp3"
+              />
               Your browser does not support the audio element.
             </audio>
           </b-alert>
@@ -67,29 +79,31 @@
 
         <div v-for="(dispositivo, index) in dispositivos" :key="index">
           <div v-if="dispositivo.identificador === tabSeleccionada">
-            <div class="descripcion">
-              <p>
-                Actividad del dispositivo:
-                {{ dispositivo.actividad ? "Activo" : "Inactivo" }}
-              </p>
-              <p>
-                {{ dispositivo.categoria }} -
-                {{ dispositivo.identificador }}
-              </p>
-              <p>
-                Ultima actualización:
-                {{ dispositivo.ultima_actualizacion }}
-              </p>
-              <p>Sensores:</p>
-              <div
-                v-for="(sensor, index) in sensores[dispositivo.identificador]"
-                :key="index"
-              >
+            <div>
+              <div class="descripcion">
                 <p>
-                  -
-                  {{ sensor.nombre }}: {{ sensor.lectura }}
-                  {{ sensor.unidadmedida }}
+                  Actividad del dispositivo:
+                  {{ dispositivo.actividad ? "Activo" : "Inactivo" }}
                 </p>
+                <p>
+                  {{ dispositivo.categoria }} -
+                  {{ dispositivo.identificador }}
+                </p>
+                <p>
+                  Ultima actualización:
+                  {{ dispositivo.ultima_actualizacion }}
+                </p>
+                <p>Sensores:</p>
+                <div
+                  v-for="(sensor, index) in sensores[dispositivo.identificador]"
+                  :key="index"
+                >
+                  <p>
+                    -
+                    {{ sensor.nombre }}: {{ sensor.lectura }}
+                    {{ sensor.unidadmedida }}
+                  </p>
+                </div>
               </div>
 
               <div>
@@ -161,248 +175,359 @@
         </div>
         <div>
           <div v-if="'dispositivos' === tabSeleccionada">
-            <div class="descripcion">
-              <button
-                @click="makeDisplay('formulario')"
-                :class="[display === 'main' ? 'btn btn-success' : 'invisible']"
-              >
-                NUEVO DISPOSITIVO
-              </button>
-              <button
-                @click="makeDisplay('listCategorias')"
-                :class="[display === 'main' ? 'btn btn-success' : 'invisible']"
-              >
-                LISTAR CATEGORIAS
-              </button>
-
-              <div
-                v-for="(dispositivo, index) in dispositivos"
-                :key="index"
-                :class="[display === 'main' ? 'frutasDesechadas' : 'invisible']"
-              >
-                <p>
-                  {{ dispositivo.categoria }} -
-                  {{ dispositivo.identificador }}
-                  <button @click="anadirTab(dispositivo)" class="addBtn">
-                    <svg
-                      width="1em"
-                      height="1em"
-                      viewBox="0 0 16 16"
-                      class="bi bi-plus-circle-fill"
-                      fill="currentColor"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
-
-              <div :class="[display === 'formulario' ? '' : 'invisible']">
-                <b-form @submit="checkForm" @reset="onReset">
-                  <b-form-group
-                    id="input-group-1"
-                    label="Identificador del dispositivo:"
-                    label-for="input-1"
-                  >
-                    <b-form-input
-                      id="input-1"
-                      v-model="form.identificador"
-                      required
-                      placeholder="Identificador"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="input-group-3"
-                    label="Categoria del dispositivo:"
-                    label-for="input-2"
-                  >
-                    <b-form-select
-                      id="input-2"
-                      v-model="form.categoria"
-                      :options="nombreCategorias"
-                      required
-                    ></b-form-select>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="input-group-3"
-                    label="Marca del dispositivo:"
-                    label-for="input-3"
-                  >
-                    <b-form-input
-                      id="input-3"
-                      v-model="form.marca"
-                      required
-                      placeholder="Marca"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="input-group-4"
-                    label="Modelo del dispositivo:"
-                    label-for="input-4"
-                  >
-                    <b-form-input
-                      id="input-4"
-                      v-model="form.modelo"
-                      required
-                      placeholder="Modelo"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="input-group-5"
-                    label="Ubicacion del dispositivo:"
-                    label-for="input-5"
-                  >
-                    <b-form-input
-                      id="input-5"
-                      v-model="form.ubicacion"
-                      placeholder="Ubicacion"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="input-group-6"
-                    label="Fecha de alta del dispositivo:"
-                    label-for="input-6"
-                  >
-                    <b-calendar
-                      id="input-6"
-                      v-model="form.fechaAlta"
-                      block
-                      @context="onContext"
-                      locale="en-US"
-                      selected-variant="success"
-                      today-variant="info"
-                      nav-button-variant="primary"
-                    ></b-calendar>
-                  </b-form-group>
-
-                  <div class="form-group row">
-                    <b-button type="submit" variant="primary">Enviar</b-button>
-                    <b-button type="reset" variant="warning">Resetear</b-button>
-                    <b-button @click="makeDisplay('main')" variant="danger"
-                      >Cancelar</b-button
-                    >
-                  </div>
-                </b-form>
-              </div>
-
-              <div
-                v-for="(categoria, index) in categorias"
-                :key="index"
-                :class="[
-                  display === 'listCategorias'
-                    ? 'frutasDesechadas'
-                    : 'invisible',
-                ]"
-              >
-                <p>
-                  {{ categoria.categoria }} - {{ categoria.id }} -
-                  {{ categoria.proposito }}
-
+            <div>
+              <div :class="[display === 'main' ? 'descripcion' : 'invisible']">
+                <div
+                  class="row"
+                  style="justify-content: center; margin-bottom: 50px"
+                >
                   <b-button
-                    v-b-toggle="idCategoriaToggle(categoria.id)"
-                    variant="primary"
-                    >Mostrar sensores</b-button
+                    @click="makeDisplay('formulario')"
+                    variant="outline-info"
+                    size="lg"
+                    :class="[display === 'main' ? '' : 'invisible']"
+                    style="margin-right: 30px"
                   >
-                  <b-collapse
-                    :id="idCategoriaToggle(categoria.id)"
-                    class="mt-2"
+                    NUEVO DISPOSITIVO
+                  </b-button>
+                  <b-button
+                    @click="makeDisplay('listCategorias')"
+                    variant="outline-info"
+                    size="lg"
+                    :class="[display === 'main' ? '' : 'invisible']"
+                    style="margin-left: 30px"
                   >
-                    <b-card>
-                      <div
-                        v-for="(sensor, index) in sensoresCategoria[
-                          categoria.id
-                        ]"
-                        :key="index"
-                        :class="[
-                          display === 'listCategorias'
-                            ? 'frutasDesechadas'
-                            : 'invisible',
-                        ]"
-                      >
-                        <button
-                          @click="makeDisplayEditarSensor(categoria.id, sensor)"
-                          class="btn btn-warning"
-                        >
-                          <p class="card-text">
-                            {{ sensor.nombre }} - {{ sensor.unidadmedida }}
+                    LISTAR CATEGORIAS
+                  </b-button>
+                </div>
+
+                <div :class="[display === 'main' ? 'row' : 'invisible']">
+                  <div
+                    v-for="(dispositivo, index) in dispositivos"
+                    :key="index"
+                    class="col-md-3 col-6 my-1"
+                  >
+                    <div class="card h-100">
+                      <div class="card-body" style="text-align: center">
+                        <div class="card-title">
+                          {{ dispositivo.identificador }}
+                          <button
+                            @click="anadirTab(dispositivo)"
+                            class="addBtn"
+                          >
                             <svg
+                              width="1em"
+                              height="1em"
+                              viewBox="0 0 16 16"
+                              class="bi bi-plus-circle-fill"
+                              fill="currentColor"
                               xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="black"
-                              width="36px"
-                              height="36px"
                             >
-                              <path d="M0 0h24v24H0V0z" fill="none" />
                               <path
-                                d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1c-.1.1-.15.22-.15.36zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                                fill-rule="evenodd"
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"
                               />
                             </svg>
-                          </p>
-                        </button>
+                          </button>
+                        </div>
+                        <div>
+                          <span class="badge badge-pill badge-info">{{
+                            dispositivo.categoria
+                          }}</span>
+                        </div>
                       </div>
-                      <button
-                        @click="makeDisplayFormularioSensores(categoria.id)"
-                        class="btn btn-success"
-                      >
-                        NUEVO SENSOR
-                      </button>
-                    </b-card>
-                  </b-collapse>
-                </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <button
-                @click="makeDisplay('nuevaCategoria')"
-                :class="[
-                  display === 'listCategorias'
-                    ? 'btn btn-success'
-                    : 'invisible',
-                ]"
-              >
-                NUEVA CATEGORIA
-              </button>
-              <b-button
-                @click="makeDisplay('main')"
-                :class="[
-                  display === 'listCategorias'
-                    ? 'btn btn-success'
-                    : 'invisible',
-                ]"
-                variant="danger"
-                >ATRAS</b-button
-              >
 
-              <div :class="[display === 'nuevaCategoria' ? '' : 'invisible']">
+              <div
+                :class="[
+                  display === 'formulario' ? 'descripcion' : 'invisible',
+                ]"
+              >
+                <div
+                  :class="[display === 'formulario' ? '' : 'invisible']"
+                  style="padding: 0 40px"
+                >
+                  <b-form @submit="checkForm" @reset="onReset">
+                    <b-form-group
+                      id="input-group-1"
+                      label-cols="3"
+                      label="Identificador del dispositivo:"
+                      label-size="lg"
+                      label-for="input-1"
+                      style="margin-bottom: 10px"
+                    >
+                      <b-form-input
+                        id="input-1"
+                        v-model="form.identificador"
+                        required
+                        size="lg"
+                        placeholder="Identificador"
+                      ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                      id="input-group-3"
+                      label-cols="3"
+                      label-size="lg"
+                      label="Categoria del dispositivo:"
+                      label-for="input-2"
+                      style="margin-bottom: 10px"
+                    >
+                      <b-form-select
+                        id="input-2"
+                        v-model="form.categoria"
+                        size="lg"
+                        :options="nombreCategorias"
+                        required
+                      ></b-form-select>
+                    </b-form-group>
+
+                    <b-form-group
+                      id="input-group-3"
+                      label-cols="3"
+                      label-size="lg"
+                      label="Marca del dispositivo:"
+                      label-for="input-3"
+                      style="margin-bottom: 10px"
+                    >
+                      <b-form-input
+                        id="input-3"
+                        v-model="form.marca"
+                        required
+                        size="lg"
+                        placeholder="Marca"
+                      ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                      id="input-group-4"
+                      label-cols="3"
+                      label-size="lg"
+                      label="Modelo del dispositivo:"
+                      label-for="input-4"
+                      style="margin-bottom: 10px"
+                    >
+                      <b-form-input
+                        id="input-4"
+                        v-model="form.modelo"
+                        required
+                        size="lg"
+                        placeholder="Modelo"
+                      ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                      id="input-group-5"
+                      label-cols="3"
+                      label-size="lg"
+                      label="Ubicacion del dispositivo:"
+                      label-for="input-5"
+                      style="margin-bottom: 10px"
+                    >
+                      <b-form-input
+                        id="input-5"
+                        size="lg"
+                        v-model="form.ubicacion"
+                        placeholder="Ubicacion"
+                      ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                      id="input-group-6"
+                      label-size="lg"
+                      label-cols="3"
+                      label="Fecha de alta del dispositivo:"
+                      label-for="input-6"
+                      style="margin-bottom: 10px"
+                    >
+                      <b-calendar
+                        id="input-6"
+                        v-model="form.fechaAlta"
+                        block
+                        size="lg"
+                        @context="onContext"
+                        locale="en-US"
+                        selected-variant="success"
+                        today-variant="info"
+                        nav-button-variant="primary"
+                      ></b-calendar>
+                    </b-form-group>
+
+                    <div
+                      class="form-group row"
+                      style="justify-content: center; margin-top: 30px"
+                    >
+                      <b-button
+                        type="submit"
+                        variant="outline-success"
+                        size="lg"
+                        >Enviar</b-button
+                      >
+                      <b-button
+                        type="reset"
+                        variant="outline-info"
+                        size="lg"
+                        style="margin: 0 30px"
+                        >Resetear</b-button
+                      >
+                      <b-button
+                        @click="makeDisplay('main')"
+                        variant="outline-danger"
+                        size="lg"
+                        >Cancelar</b-button
+                      >
+                    </div>
+                  </b-form>
+                </div>
+              </div>
+
+              <div
+                :class="[display === 'listCategorias' ? 'row' : 'invisible']"
+                style="margin: 30px 5px; justify-content: center"
+              >
+                <b-col
+                  v-for="(categoria, index) in categorias"
+                  :key="index"
+                  :class="[
+                    display === 'listCategorias' ? 'card h-10' : 'invisible',
+                  ]"
+                  sm="3"
+                  style="
+                    font-size: 24px;
+                    height: min-content;
+                    min-height: 200px;
+                    margin: 10px;
+                  "
+                >
+                  <div class="card-body" style="text-align: center">
+                    <div class="card-title">
+                      {{ categoria.categoria }}
+                      <span class="badge badge-pill badge-info">{{
+                        categoria.proposito
+                      }}</span>
+                    </div>
+                    <div>
+                      <b-button
+                        v-b-toggle="idCategoriaToggle(categoria.id)"
+                        variant="primary"
+                      >
+                        Desplegar
+                        {{ sensoresCategoria[categoria.id].length }}
+                        sensores</b-button
+                      >
+                      <b-collapse
+                        :id="idCategoriaToggle(categoria.id)"
+                        class="mt-2"
+                      >
+                        <b-card>
+                          <div
+                            v-for="(sensor, index) in sensoresCategoria[
+                              categoria.id
+                            ]"
+                            :key="index"
+                            :class="[
+                              display === 'listCategorias'
+                                ? 'frutasDesechadas'
+                                : 'invisible',
+                            ]"
+                          >
+                            <b-button
+                              @click="
+                                makeDisplayEditarSensor(categoria.id, sensor)
+                              "
+                              variant="info"
+                              block
+                            >
+                              <p class="card-text">
+                                {{ sensor.nombre }} -
+                                {{ sensor.unidadmedida }}
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="black"
+                                  width="36px"
+                                  height="36px"
+                                >
+                                  <path d="M0 0h24v24H0V0z" fill="none" />
+                                  <path
+                                    d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1c-.1.1-.15.22-.15.36zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                                  />
+                                </svg>
+                              </p>
+                            </b-button>
+                          </div>
+                          <b-button
+                            @click="makeDisplayFormularioSensores(categoria.id)"
+                            variant="outline-primary"
+                            block
+                          >
+                            NUEVO SENSOR
+                          </b-button>
+                        </b-card>
+                      </b-collapse>
+                    </div>
+                  </div>
+                </b-col>
+              </div>
+
+              <div
+                class="row"
+                style="justify-content: center; margin-top: 30px"
+              >
+                <b-button
+                  @click="makeDisplay('nuevaCategoria')"
+                  :class="[display === 'listCategorias' ? '' : 'invisible']"
+                  style="margin-right: 20px"
+                  variant="outline-primary"
+                >
+                  NUEVA CATEGORIA
+                </b-button>
+                <b-button
+                  @click="makeDisplay('main')"
+                  :class="[display === 'listCategorias' ? '' : 'invisible']"
+                  style="margin-left: 20px"
+                  variant="outline-danger"
+                  >ATRAS</b-button
+                >
+              </div>
+
+              <div
+                :class="[display === 'nuevaCategoria' ? '' : 'invisible']"
+                style="padding: 0 40px"
+              >
                 <b-form @submit="checkFormCategoria" @reset="onResetCategoria">
                   <b-form-group
                     id="input-group-1"
                     label="Nombre de la categoria:"
+                    label-size="lg"
+                    style="margin-bottom: 10px"
+                    label-cols="2"
                     label-for="input-1"
                   >
                     <b-form-input
                       id="input-1"
                       v-model="formCategoria.categoria"
                       required
+                      size="lg"
                       placeholder="Nombre categoria"
                     ></b-form-input>
                   </b-form-group>
 
                   <b-form-group
                     id="input-group-3"
+                    label-cols="2"
+                    label-size="lg"
+                    style="margin-bottom: 10px"
                     label="Proposito de la categoria:"
                     label-for="input-2"
                   >
                     <b-form-input
                       id="input-3"
                       required
+                      size="lg"
                       v-model="formCategoria.proposito"
                       placeholder="Proposito"
                     ></b-form-input>
@@ -410,6 +535,9 @@
 
                   <b-form-group
                     id="input-group-1"
+                    label-cols="2"
+                    style="margin-bottom: 10px"
+                    label-size="lg"
                     label="Tiempo de actualziacion:"
                     label-for="input-3"
                   >
@@ -418,16 +546,27 @@
                       v-model="formCategoria.updatetime"
                       type="number"
                       required
+                      size="lg"
                       placeholder="Tiempo de actualziacion"
                     ></b-form-input>
                   </b-form-group>
 
-                  <div class="form-group row">
-                    <b-button type="submit" variant="primary">Crear</b-button>
-                    <b-button type="reset" variant="warning">Resetear</b-button>
+                  <div
+                    class="row"
+                    style="justify-content: center; margin-top: 40px"
+                  >
+                    <b-button type="submit" variant="outline-primary"
+                      >Crear</b-button
+                    >
+                    <b-button
+                      type="reset"
+                      variant="outline-secondary"
+                      style="margin: 0 40px"
+                      >Resetear</b-button
+                    >
                     <b-button
                       @click="makeDisplay('listCategorias')"
-                      variant="danger"
+                      variant="outline-danger"
                       >Cancelar</b-button
                     >
                   </div>
@@ -436,18 +575,25 @@
 
               <div
                 :class="[display === 'formularioSensores' ? '' : 'invisible']"
+                style="padding: 0 40px"
               >
-                <h1>La categoria es: {{ formSensor.idCategoria }}</h1>
+                <h1 style="margin-bottom: 15px">
+                  La categoria es: {{ formSensor.idCategoria }}
+                </h1>
                 <b-form @submit="checkFormSensor" @reset="onResetSensor">
                   <b-form-group
                     id="input-group-1"
                     label="Nombre el sensor:"
                     label-for="input-1"
+                    label-size="lg"
+                    style="margin-bottom: 10px"
+                    label-cols="2"
                   >
                     <b-form-input
                       id="input-1"
                       v-model="formSensor.nombre"
                       required
+                      size="lg"
                       placeholder="Nombre sensor"
                     ></b-form-input>
                   </b-form-group>
@@ -456,10 +602,14 @@
                     id="input-group-3"
                     label="Unidad de medida:"
                     label-for="input-2"
+                    label-size="lg"
+                    style="margin-bottom: 10px"
+                    label-cols="2"
                   >
                     <b-form-input
                       id="input-3"
                       required
+                      size="lg"
                       v-model="formSensor.unidadmedida"
                       placeholder="Unidad de medida"
                     ></b-form-input>
@@ -469,11 +619,15 @@
                     id="input-group-1"
                     label="Minimo:"
                     label-for="input-3"
+                    label-size="lg"
+                    style="margin-bottom: 10px"
+                    label-cols="2"
                   >
                     <b-form-input
                       id="input-1"
                       v-model="formSensor.min"
                       type="number"
+                      size="lg"
                       placeholder="Minimo"
                     ></b-form-input>
                   </b-form-group>
@@ -482,11 +636,15 @@
                     id="input-group-1"
                     label="Maximo:"
                     label-for="input-4"
+                    label-size="lg"
+                    style="margin-bottom: 10px"
+                    label-cols="2"
                   >
                     <b-form-input
                       id="input-4"
                       v-model="formSensor.max"
                       type="number"
+                      size="lg"
                       placeholder="Maximo"
                     ></b-form-input>
                   </b-form-group>
@@ -495,21 +653,35 @@
                     id="input-group-7"
                     label="Grafica:"
                     label-for="input-7"
+                    label-size="lg"
+                    style="margin-bottom: 10px"
+                    label-cols="2"
                   >
                     <b-form-select
                       id="input-2"
+                      size="lg"
                       v-model="formSensor.grafica"
                       :options="tiposDeGraficasNombre"
                       required
                     ></b-form-select>
                   </b-form-group>
 
-                  <div class="form-group row">
-                    <b-button type="submit" variant="primary">Crear</b-button>
-                    <b-button type="reset" variant="warning">Resetear</b-button>
+                  <div
+                    class="row"
+                    style="justify-content: center; margin-top: 40px"
+                  >
+                    <b-button type="submit" variant="outline-primary"
+                      >Crear</b-button
+                    >
+                    <b-button
+                      type="reset"
+                      variant="outline-secondary"
+                      style="margin: 0 40px"
+                      >Resetear</b-button
+                    >
                     <b-button
                       @click="makeDisplay('listCategorias')"
-                      variant="danger"
+                      variant="outline-danger"
                       >Cancelar</b-button
                     >
                   </div>
@@ -1192,14 +1364,6 @@ export default {
   font-size: 11px;
 }
 
-.container {
-  display: flex;
-  width: 100vw;
-  margin: 20px 1vw 0 1vw;
-  min-height: 500px;
-  font-size: 3vw;
-}
-
 .tab {
   background-color: #6a9dc4;
   position: relative;
@@ -1298,6 +1462,9 @@ export default {
   color: #4cb22a;
   cursor: pointer;
   border: transparent;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .deleteBtn {
