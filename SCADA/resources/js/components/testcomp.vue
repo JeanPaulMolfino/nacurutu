@@ -1065,15 +1065,16 @@ export default {
           errorNombre = true;
         }
       });
-      if (!errorNombre) {
-        let aux = this.tiposDeGraficas.forEach((grafica) => {
+      var aux = "1";
+      this.tiposDeGraficas.map((grafica) => {
           if (grafica.nombre === this.formSensor.grafica) {
-            aux = grafica.id;
+            aux = grafica.id.toString();
           }
         });
-        this.formSensor.grafica = aux;
-        this.sendSensor();
+      if (!errorNombre) {
+        this.sendSensor(aux);
         this.makeDisplay("listCategorias");
+        this.onResetSensor(e);
         console.log("Un exito muchachin");
       } else {
         console.log("Malardo del mal ingresa bien las cosas");
@@ -1239,7 +1240,7 @@ export default {
     getSensorUpdateMax() {
       return this.formSensor.max != "" ? this.formSensor.max : "null";
     },
-    async sendSensor() {
+    async sendSensor(graphId) {
       this.loaded = false;
       try {
         const response = await fetch(
@@ -1250,7 +1251,7 @@ export default {
             "/" +
             this.remplazar(this.formSensor.unidadmedida) +
             "/" +
-            this.formSensor.grafica +
+            graphId +
             "/" +
             this.remplazar(this.formSensor.nombre) +
             "/" +
