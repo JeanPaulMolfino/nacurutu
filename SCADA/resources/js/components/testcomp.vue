@@ -415,7 +415,7 @@
                         variant="primary"
                       >
                         Desplegar
-                        {{ sensoresCategoria[categoria.id].length }}
+                        
                         sensores</b-button
                       >
                       <b-collapse
