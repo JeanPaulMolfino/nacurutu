@@ -439,7 +439,13 @@
                         v-b-toggle="idCategoriaToggle(categoria.id)"
                         variant="primary"
                       >
+<<<<<<< HEAD
                         Desplegar sensores</b-button
+=======
+                        Desplegar
+                        
+                        sensores</b-button
+>>>>>>> main
                       >
                       <b-collapse
                         :id="idCategoriaToggle(categoria.id)"
