@@ -7,9 +7,9 @@
             v-model="showDismissibleAlert[alerta.identificador]"
             variant="danger"
             dismissible
-            style="overflow: hidden"
+            style="overflow: hidden; border-radius:0;"
           >
-            {{ alerta.identificador }}
+            El dispositivo {{ alerta.identificador }} registró {{ alerta.lectura}} sobrepasando su umbral.
             <iframe
               src="https://s3-eu-west-1.amazonaws.com/omegasquadron.neilbryson.net/silence.mp3"
               allow="autoplay"
@@ -38,6 +38,7 @@
                 ? 'nav-item nav-link active'
                 : 'nav-item nav-link',
             ]"
+            style="border-radius: 0;"
           >
             <p>Home</p>
           </div>
@@ -50,9 +51,9 @@
                 ? 'nav-item nav-link active'
                 : 'nav-item nav-link',
             ]"
+            style="border-radius: 0;"
           >
             <p>
-              {{ dispositivo.categoria }} -
               {{ dispositivo.identificador }}
             </p>
             <button
@@ -79,96 +80,120 @@
 
         <div v-for="(dispositivo, index) in dispositivos" :key="index">
           <div v-if="dispositivo.identificador === tabSeleccionada">
-            <div>
-              <div class="descripcion">
-                <p>
-                  Actividad del dispositivo:
-                  {{ dispositivo.actividad ? "Activo" : "Inactivo" }}
-                </p>
-                <p>
-                  {{ dispositivo.categoria }} -
-                  {{ dispositivo.identificador }}
-                </p>
-                <p>
-                  Ultima actualización:
-                  {{ dispositivo.ultima_actualizacion }}
-                </p>
-                <p>Sensores:</p>
-                <div
-                  v-for="(sensor, index) in sensores[dispositivo.identificador]"
-                  :key="index"
-                >
-                  <p>
-                    -
-                    {{ sensor.nombre }}: {{ sensor.lectura }}
-                    {{ sensor.unidadmedida }}
-                  </p>
-                </div>
-              </div>
-
-              <div>
+            <div style="font-size: 16px">
+              <div style="padding: 0 40px; justify-content: center">
                 <b-form @submit="displayGrafica">
                   <b-form-group
                     id="input-group-6"
                     label="Sensor:"
                     label-for="input-6"
+                    style="margin-bottom: 10px"
+                    label-size="lg"
                   >
-                    <!-- En options van los nombrs de los sensores -->
                     <b-form-select
                       id="input-2"
                       v-model="formGrafica.sensor"
                       :options="sensoresTabSeleccionada"
                       required
+                      size="lg"
                     ></b-form-select>
                   </b-form-group>
 
-                  <b-form-group
-                    id="input-group-6"
-                    label="Desde:"
-                    label-for="input-6"
-                  >
-                    <b-calendar
-                      id="input-6"
-                      v-model="formGrafica.from"
-                      block
-                      @context="onContext"
-                      locale="en-US"
-                      selected-variant="success"
-                      today-variant="info"
-                      nav-button-variant="primary"
-                    ></b-calendar>
-                  </b-form-group>
+                  <div class="row" style="justify-content: center">
+                    <b-form-group
+                      id="input-group-6"
+                      label="Desde:"
+                      label-for="input-6"
+                      style="margin-bottom: 10px"
+                      label-size="lg"
+                      label-cols="2"
+                    >
+                      <b-calendar
+                        id="input-6"
+                        v-model="formGrafica.from"
+                        width="500px"
+                        @context="onContext"
+                        locale="en-US"
+                        selected-variant="success"
+                        today-variant="info"
+                        nav-button-variant="primary"
+                      ></b-calendar>
+                    </b-form-group>
 
-                  <b-form-group
-                    id="input-group-6"
-                    label="Hasta:"
-                    label-for="input-6"
+                    <b-form-group
+                      id="input-group-6"
+                      label="Hasta:"
+                      label-for="input-6"
+                      style="margin-bottom: 10px"
+                      label-size="lg"
+                      label-cols="2"
+                    >
+                      <b-calendar
+                        id="input-6"
+                        v-model="formGrafica.to"
+                        width="500px"
+                        @context="onContext"
+                        locale="en-US"
+                        selected-variant="success"
+                        today-variant="info"
+                        nav-button-variant="primary"
+                      ></b-calendar>
+                    </b-form-group>
+                  </div>
+                  <div
+                    class="row"
+                    style="margin: 30px 0 60px 0; justify-content: center"
                   >
-                    <b-calendar
-                      id="input-6"
-                      v-model="formGrafica.to"
-                      block
-                      @context="onContext"
-                      locale="en-US"
-                      selected-variant="success"
-                      today-variant="info"
-                      nav-button-variant="primary"
-                    ></b-calendar>
-                  </b-form-group>
-
-                  <b-button variant="primary" size="sm" type="submit"
-                    >OK</b-button
-                  >
+                    <b-button variant="outline-primary" size="sm" type="submit"
+                      >DESPLEGAR GRAFICA</b-button
+                    >
+                  </div>
                 </b-form>
 
-                <chartchooser
-                  v-if="displayGraph"
-                  :deviceIdentificator="dispositivo.identificador"
-                  :sensorIdSecondary="sensorIdSecondaryChart.toString()"
-                  :sensorGraphId="sensorGraphIdChart"
-                  :dateFrom="formGrafica.from"
-                  :dateTo="formGrafica.to"
-                />
+                <div class="row" style="font-size: 24px; margin-bottom: 40px">
+                  <b-list-group class="descripcion float-left">
+                    <b-list-group-item
+                      :variant="dispositivo.actividad ? 'success' : 'danger'"
+                    >
+                      Actividad del dispositivo:
+                      {{ dispositivo.actividad ? "Activo" : "Inactivo" }}
+                    </b-list-group-item>
+                    <b-list-group-item variant="info">
+                      Identificador del dispositivo :
+                      {{ dispositivo.identificador }}
+                    </b-list-group-item>
+                    <b-list-group-item variant="info">
+                      Categoria del dispositivo : {{ dispositivo.categoria }}
+                    </b-list-group-item>
+
+                    <b-list-group-item variant="info">
+                      Ultima actualización:
+                      {{ dispositivo.ultima_actualizacion }}
+                    </b-list-group-item>
+                    <b-list-group-item variant="info"
+                      >Sensores:
+                      <b-list-group-item
+                        v-for="sensor in sensores[dispositivo.identificador]"
+                        :key="sensor.nombre"
+                        variant="secondary"
+                      >
+                        {{ sensor.nombre }}: {{ sensor.lectura }}
+                        {{ sensor.unidadmedida }}
+                      </b-list-group-item>
+                    </b-list-group-item>
+                  </b-list-group>
+
+                  <div class="float-right" style="width: 50vw; height: auto">
+                    <chartchooser
+                      v-if="displayGraph"
+                      :deviceIdentificator="dispositivo.identificador"
+                      :sensorIdSecondary="sensorIdSecondaryChart.toString()"
+                      :sensorGraphId="sensorGraphIdChart"
+                      :dateFrom="formGrafica.from"
+                      :dateTo="formGrafica.to"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -253,11 +278,11 @@
                   <b-form @submit="checkForm" @reset="onReset">
                     <b-form-group
                       id="input-group-1"
-                      label-cols="3"
                       label="Identificador del dispositivo:"
-                      label-size="lg"
                       label-for="input-1"
                       style="margin-bottom: 10px"
+                      label-size="lg"
+                      label-cols="3"
                     >
                       <b-form-input
                         id="input-1"
@@ -414,9 +439,7 @@
                         v-b-toggle="idCategoriaToggle(categoria.id)"
                         variant="primary"
                       >
-                        Desplegar
-                        {{ sensoresCategoria[categoria.id].length }}
-                        sensores</b-button
+                        Desplegar sensores</b-button
                       >
                       <b-collapse
                         :id="idCategoriaToggle(categoria.id)"
@@ -577,7 +600,7 @@
                 :class="[display === 'formularioSensores' ? '' : 'invisible']"
                 style="padding: 0 40px"
               >
-                <h1 style="margin-bottom: 15px">
+                <h1 style="margin-bottom: 15px; overflow-y: hidden;">
                   La categoria es: {{ formSensor.idCategoria }}
                 </h1>
                 <b-form @submit="checkFormSensor" @reset="onResetSensor">
@@ -692,8 +715,15 @@
                 :class="[
                   display === 'formularioEditarSensores' ? '' : 'invisible',
                 ]"
+                style="padding: 0 40px"
               >
-                <h1>
+                <h1
+                  style="
+                    margin-bottom: 30px;
+                    font-size: 32px;
+                    overflow-y: hidden;
+                  "
+                >
                   Edite los datos que corresponda y precione el boton ACEPTAR
                 </h1>
                 <b-form @submit="checkEditarSensor">
@@ -701,12 +731,16 @@
                     id="input-group-1"
                     label="Nombre el sensor:"
                     label-for="input-1"
+                    style="margin-bottom: 10px"
+                    label-size="lg"
+                    label-cols="3"
                   >
                     <b-form-input
                       id="input-1"
                       v-model="updateSensor.nombre"
                       required
                       placeholder="Nombre sensor"
+                      size="lg"
                     ></b-form-input>
                   </b-form-group>
 
@@ -714,12 +748,16 @@
                     id="input-group-3"
                     label="Unidad de medida:"
                     label-for="input-2"
+                    style="margin-bottom: 10px"
+                    label-size="lg"
+                    label-cols="3"
                   >
                     <b-form-input
                       id="input-3"
                       required
                       v-model="updateSensor.unidadmedida"
                       placeholder="Unidad de medida"
+                      size="lg"
                     ></b-form-input>
                   </b-form-group>
 
@@ -727,11 +765,15 @@
                     id="input-group-1"
                     label="Minimo:"
                     label-for="input-3"
+                    style="margin-bottom: 10px"
+                    label-size="lg"
+                    label-cols="3"
                   >
                     <b-form-input
                       id="input-1"
                       v-model="updateSensor.min"
                       type="number"
+                      size="lg"
                       placeholder="Minimo"
                     ></b-form-input>
                   </b-form-group>
@@ -740,11 +782,15 @@
                     id="input-group-1"
                     label="Maximo:"
                     label-for="input-4"
+                    style="margin-bottom: 10px"
+                    label-size="lg"
+                    label-cols="3"
                   >
                     <b-form-input
                       id="input-4"
                       v-model="updateSensor.max"
                       type="number"
+                      size="lg"
                       placeholder="Maximo"
                     ></b-form-input>
                   </b-form-group>
@@ -753,20 +799,33 @@
                     id="input-group-1"
                     label="Grafica:"
                     label-for="input-5"
+                    style="margin-bottom: 10px"
+                    label-size="lg"
+                    label-cols="3"
                   >
                     <b-form-input
                       id="input-5"
                       v-model="updateSensor.id_grafica"
                       required
+                      size="lg"
                       placeholder="Grafica"
                     ></b-form-input>
                   </b-form-group>
 
-                  <div class="form-group row">
-                    <b-button type="submit" variant="primary">ACEPTAR</b-button>
+                  <div
+                    class="row"
+                    style="justify-content: center; margin-top: 40px"
+                  >
+                    <b-button
+                      type="submit"
+                      variant="outline-primary"
+                      style="margin-right: 10px"
+                      >ACEPTAR</b-button
+                    >
                     <b-button
                       @click="makeDisplay('listCategorias')"
-                      variant="danger"
+                      variant="outline-danger"
+                      style="margin-left: 10px"
                       >CANCELAR</b-button
                     >
                   </div>
@@ -1007,14 +1066,14 @@ export default {
         }
       });
       if (!errorNombre) {
-        this.formSensor.grafica = this.tiposDeGraficas.map((grafica) => {
+        let aux = this.tiposDeGraficas.forEach((grafica) => {
           if (grafica.nombre === this.formSensor.grafica) {
-            this.formSensor.grafica = grafica.id;
+            aux = grafica.id;
           }
         });
+        this.formSensor.grafica = aux;
         this.sendSensor();
         this.makeDisplay("listCategorias");
-        this.onResetSensor();
         console.log("Un exito muchachin");
       } else {
         console.log("Malardo del mal ingresa bien las cosas");
@@ -1089,6 +1148,7 @@ export default {
       } catch (e) {
         console.error("catched! " + e);
       }
+      setInterval(() => this.fetchSensores(dispositivo), 60000);
     },
     async fetchGraficas() {
       var aux = [];
