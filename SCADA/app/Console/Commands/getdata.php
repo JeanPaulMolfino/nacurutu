@@ -76,7 +76,7 @@ class getdata extends Command
                     //Y por cada dato
                     $index = 1;
                     $sensores = DB::select('select id_sensor_secundario as id from sensores where id_tipo=?', [$dispositivo->id_tipo]);
-                    while ($index < $cantidad && $index < count($sensores)) {
+                    while ($index < $cantidad && $index <= count($sensores)) {
                         //Lo inserto en la base de datos
                         DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$datos[0], $datos[$index], $dispositivo->id, $sensores[$index - 1]->id]);
                         $index++;
