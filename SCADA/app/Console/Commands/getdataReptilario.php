@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class getdataReptilario extends Command
 {
@@ -11,7 +12,7 @@ class getdataReptilario extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'getdataReptilario';
 
     /**
      * The console command description.
@@ -37,6 +38,20 @@ class getdataReptilario extends Command
      */
     public function handle()
     {
-        return 0;
+        //Con esto pretendo que me traiga todos los id de dispositivos que tengan tareas pendientes en conjunto a su ultima medicion
+        // o aquellos que ya halla excedido el tiempo de actualizacion desde que se les hizo update
+        $id_tipo = DB::select("select * from tipos_dispositivos where categoria='Reptilario'");
+        $dispositivos = DB::select("select d.id, d.identificador, d.id_tipo,DATE_FORMAT(d.ultima_actualizacion,'%Y-%m-%d-%H-%i-%S') as ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as t where d.id_tipo = t.id and d.actividad = 1 and (DATE_ADD(d.ultima_actualizacion, INTERVAL t.updatetime MINUTE) < NOW() and t.categoria = 'Reptilario')");
+        $sensores = DB::select("select * from sensores where id_tipo", [$id_tipo]);
+        foreach ($dispositivos as $dispositivo) {
+            /*var_dump($dispositivo);
+            //tempagua 20 Min 25 y Max 27
+            //volumen 24 Min 20 y Max 24
+            //oxigeno 25 Min 6 y Max 7 de mercurio
+            $fecha = date("Y/m/d H:i:s");
+            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (25,27))), $dispositivo->id, 20]);
+            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (20,24))), $dispositivo->id, 24]);
+            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (6,7))), $dispositivo->id, 25]);*/
+        }
     }
 }
