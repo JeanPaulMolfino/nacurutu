@@ -57,7 +57,7 @@ class DummyDeviceController extends Controller
 				$randSecond = "0".$randSecond;
 			}
 			//return date("Y-m-d-h-i-").$randSecond ;
-			return date("Y-m-d-h-i-");
+			return date("Y-m-d-H-i-");
 		}
 
 		function generateMeteoLine(int $someKindOfIndex){
