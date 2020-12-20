@@ -15,17 +15,41 @@ export default {
         },
         dateFrom: {
             type: String,
-            default: `2020-12-01`
+            default: `2000-12-31`
         },
         dateTo: {
             type: String,
-            default: `2021-01-01`
+            default: `2077-12-31`
         },
         endpoint: {
             type: String,
-            default: `http://127.0.0.1:8000/endpoints/get:medidasbydispositivo/`
-            // '/api/userlist')
-            //default: `/endpoints/get:medidasbydispositivo/`
+            default: `/endpoints/get:medidasbydispositivo/`
+        }
+    },
+    data: function() {
+        return {
+            intervalHandler: 0
+        };
+    },
+    watch: {
+        computeLink: function(newComputeLink, oldComputeLink) {
+            console.log("chartradarstandalone watched changes");
+            clearInterval(this.intervalHandler);
+            this.asyncInterval();
+        }
+    },
+    computed: {
+        computeLink: function() {
+            let retLink =
+                this.endpoint +
+                this.deviceIdentificator +
+                `/` +
+                this.sensorIdSecondary +
+                `/` +
+                this.dateFrom +
+                `/` +
+                this.dateTo;
+            return retLink;
         }
     },
     methods: {
@@ -108,7 +132,15 @@ export default {
                     labels: ["N", "NE", "E", "SE", "S", "SO", "O", "NO"],
                     datasets: [
                         {
-                            label: "Radar Chart",
+                            label:
+                                "[" +
+                                this.deviceIdentificator +
+                                ": " +
+                                this.sensorIdSecondary +
+                                "] " +
+                                this.dateFrom +
+                                " | " +
+                                this.dateTo,
                             data: dataRet,
                             fill: false,
                             borderColor: "#2554FF",
@@ -139,28 +171,34 @@ export default {
             } catch (e) {
                 console.error("catched! " + e);
             }
-        }
-    },
-    async mounted() {
-        const asyncInterval = async (callback, ms, triesLeft = 5) => {
+		},
+        async asyncInterval(ms, triesLeft = 4) {
+			await this.fetchCustom();
+			triesLeft--;
             return new Promise((resolve, reject) => {
-                const interval = setInterval(
+                this.intervalHandler = setInterval(
                     async () => {
                         if (await this.fetchCustom()) {
                             resolve();
-                            clearInterval(interval);
+                            clearInterval(this.intervalHandler);
                         } else if (triesLeft <= 1) {
-                            reject();
-                            clearInterval(interval);
+                            reject("Tries left: <=1)");
+                            clearInterval(this.intervalHandler);
                         }
                         triesLeft--;
                     },
-
-                    1000
+                    2000
                 );
             });
-        };
-        asyncInterval();
+        }
+	},
+	destroyed() {
+		console.log("chartradarstandalone destroyed");
+		clearInterval(this.intervalHandler);
+		//reject("chartradarstandalone destroyed");
+    },
+    async mounted() {
+        this.asyncInterval();
         console.log(`Component ${this.$options.name} mounted!.`);
     }
 };
