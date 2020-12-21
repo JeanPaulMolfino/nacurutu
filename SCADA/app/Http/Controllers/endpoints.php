@@ -42,15 +42,15 @@ class endpoints extends Controller
         if ($finicio != 'null' && $ffin != 'null') {
             //$finicio[10] = ' ';
             //$ffin[10] = ' ';
-            $data = json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.tiempo >='" . $finicio . "' and m.tiempo <= '" . $ffin . "' and m.id_sensor=" . $idsensor . " and d.identificador='" . $iddispositivo . "'"), JSON_UNESCAPED_UNICODE);
+            $data = json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and DATE(m.tiempo) >='" . $finicio . "' and DATE(m.tiempo) <= '" . $ffin . "' and m.id_sensor=" . $idsensor . " and d.identificador='" . $iddispositivo . "'"), JSON_UNESCAPED_UNICODE);
             return response($data, 200)->header('Content-Type', 'application/json');
         } else if ($finicio != 'null' && $ffin === 'null') {
             //$finicio[10] = ' ';
-            $data = json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.tiempo >='" . $finicio . "' and m.id_sensor=" . $idsensor . " and d.identificador='" . $iddispositivo . "'"), JSON_UNESCAPED_UNICODE);
+            $data = json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and DATE(m.tiempo) >='" . $finicio . "' and m.id_sensor=" . $idsensor . " and d.identificador='" . $iddispositivo . "'"), JSON_UNESCAPED_UNICODE);
             return response($data, 200)->header('Content-Type', 'application/json');
         } else if ($finicio === 'null' && $ffin != 'null') {
             //$ffin[10] = ' ';
-            $data = json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.tiempo <='" . $ffin . "' and m.id_sensor=" . $idsensor . " and d.identificador='" . $iddispositivo . "'"), JSON_UNESCAPED_UNICODE);
+            $data = json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and DATE(m.tiempo) <='" . $ffin . "' and m.id_sensor=" . $idsensor . " and d.identificador='" . $iddispositivo . "'"), JSON_UNESCAPED_UNICODE);
             return response($data, 200)->header('Content-Type', 'application/json');
         } else {
             $data = json_encode(DB::select("select m.lectura, m.tiempo from medidas as m inner join dispositivos as d where m.id_dispositivo=d.id and m.id_sensor=" . $idsensor . " and d.identificador='" . $iddispositivo . "'"), JSON_UNESCAPED_UNICODE);
