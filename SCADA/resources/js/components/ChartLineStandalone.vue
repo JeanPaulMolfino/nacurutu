@@ -28,7 +28,8 @@ export default {
     },
     data: function() {
         return {
-            intervalHandler: 0
+            intervalHandler: 0,
+            rejectable: null
         };
     },
     watch: {
@@ -117,29 +118,30 @@ export default {
             }
         },
         async asyncInterval(ms, triesLeft = 4) {
-			await this.fetchCustom();
-			triesLeft--;
+            await this.fetchCustom();
+            triesLeft--;
             return new Promise((resolve, reject) => {
-                this.intervalHandler = setInterval(
-                    async () => {
-                        if (await this.fetchCustom()) {
-                            resolve();
-                            clearInterval(this.intervalHandler);
-                        } else if (triesLeft <= 1) {
-                            reject("Tries left: <=1)");
-                            clearInterval(this.intervalHandler);
-                        }
-                        triesLeft--;
-                    },
-                    2000
-                );
+                this.rejectable = reject;
+                this.intervalHandler = setInterval(async () => {
+                    if (await this.fetchCustom()) {
+                        resolve();
+                        clearInterval(this.intervalHandler);
+                    } else if (triesLeft <= 1) {
+                        reject("Tries Line left: <=1)");
+                        clearInterval(this.intervalHandler);
+                    }
+                    triesLeft--;
+                }, 2000);
+            }).catch(function(e) {
+                console.log(e);
             });
         }
-	},
-	destroyed() {
-		console.log("chartlinestandalone destroyed");
+    },
+    destroyed() {
+        console.log("chartlinestandalone destroyed");
 		clearInterval(this.intervalHandler);
-		//reject("chartlinestandalone destroyed");
+		//reject("chartlinestandalone destroyed.");
+        //reject("chartlinestandalone destroyed");
     },
     async mounted() {
         this.asyncInterval();

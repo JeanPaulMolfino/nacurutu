@@ -155,7 +155,7 @@ export default {
                             display: true
                         },
                         ticks: {
-                            suggestedMin: 0/*,
+                            suggestedMin: 0 /*,
                             suggestedMax: 100*/
                         }
                     },
@@ -171,31 +171,30 @@ export default {
             } catch (e) {
                 console.error("catched! " + e);
             }
-		},
+        },
         async asyncInterval(ms, triesLeft = 4) {
-			await this.fetchCustom();
-			triesLeft--;
+            await this.fetchCustom();
+            triesLeft--;
             return new Promise((resolve, reject) => {
-                this.intervalHandler = setInterval(
-                    async () => {
-                        if (await this.fetchCustom()) {
-                            resolve();
-                            clearInterval(this.intervalHandler);
-                        } else if (triesLeft <= 1) {
-                            reject("Tries left: <=1)");
-                            clearInterval(this.intervalHandler);
-                        }
-                        triesLeft--;
-                    },
-                    2000
-                );
+                this.intervalHandler = setInterval(async () => {
+                    if (await this.fetchCustom()) {
+                        resolve();
+                        clearInterval(this.intervalHandler);
+                    } else if (triesLeft <= 1) {
+                        reject("Tries Radar left: <=1)");
+                        clearInterval(this.intervalHandler);
+                    }
+                    triesLeft--;
+                }, 2000);
+            }).catch(function(e) {
+                console.log(e);
             });
         }
-	},
-	destroyed() {
-		console.log("chartradarstandalone destroyed");
+    },
+    destroyed() {
+        console.log("chartradarstandalone destroyed");
 		clearInterval(this.intervalHandler);
-		//reject("chartradarstandalone destroyed");
+		//reject("chartradarstandalone destroyed.");
     },
     async mounted() {
         this.asyncInterval();
