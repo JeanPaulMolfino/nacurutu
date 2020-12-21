@@ -47,7 +47,7 @@ class getdataReptilario extends Command
             var_dump($dispositivo);
             //Humedad del ambiente 65 a 75%
             $fecha = date("Y/m/d H:i:s");
-            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (65,75))), $dispositivo->id, $sensores[0]->id]);
+            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, rand (65,75), $dispositivo->id, $sensores[0]->id]);
             DB::update('update dispositivos set ultima_actualizacion = ? where id = ?', [$fecha, $dispositivo->id]);
         }
         return 0;
