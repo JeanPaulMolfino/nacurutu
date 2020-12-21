@@ -40,7 +40,7 @@ class getdataReptilario extends Command
     {
         //Con esto pretendo que me traiga todos los id de dispositivos que tengan tareas pendientes en conjunto a su ultima medicion
         // o aquellos que ya halla excedido el tiempo de actualizacion desde que se les hizo update
-        $id_tipo = DB::select("select * from tipos_dispositivos where categoria='Reptilario'");
+        $id_tipo = DB::select("select * from tipos_dispositivos where categoria='Reptilario'")[0]->id;
         $dispositivos = DB::select("select d.id, d.identificador, d.id_tipo,DATE_FORMAT(d.ultima_actualizacion,'%Y-%m-%d-%H-%i-%S') as ultima_actualizacion from dispositivos as d inner join tipos_dispositivos as t where d.id_tipo = t.id and d.actividad = 1 and (DATE_ADD(d.ultima_actualizacion, INTERVAL t.updatetime MINUTE) < NOW() and t.categoria = 'Reptilario')");
         $sensores = DB::select("select * from sensores as s where s.id_tipo = ? and s.nombre = '?'", [$id_tipo, "Humedad del ambiente"]);
         foreach ($dispositivos as $dispositivo) {
