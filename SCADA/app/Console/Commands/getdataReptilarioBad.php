@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class getdataReptilario extends Command
+class getdataReptilarioBad extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'getdataReptilario';
+    protected $signature = 'command:name';
 
     /**
      * The console command description.
@@ -47,7 +47,7 @@ class getdataReptilario extends Command
             var_dump($dispositivo);
             //Humedad del ambiente 65 a 75%
             $fecha = date("Y/m/d H:i:s");
-            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (65,75))), $dispositivo->id, $sensores[0]->id]);
+            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, 90, $dispositivo->id, $sensores[0]->id]);
             DB::update('update dispositivos set ultima_actualizacion = ? where id = ?', [$fecha, $dispositivo->id]);
         }
         return 0;

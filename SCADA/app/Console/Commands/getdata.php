@@ -91,9 +91,8 @@ class getdata extends Command
                 var_dump($ultimaactualizacion);*/
                 //Una ves que termino de insertar todas, actualizo la fecha de su ultima lectura
                 DB::update('update dispositivos set ultima_actualizacion = ? where id = ?', [$ultimaactualizacion, $dispositivo->id]);
-
             }
         }
-
+        return 0;
     }
 }
