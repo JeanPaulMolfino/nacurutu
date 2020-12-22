@@ -49,9 +49,9 @@ class getdataAcuario extends Command
             //tempagua 20 Min 25 y Max 27
             //volumen 24 Min 20 y Max 24
             //oxigeno 25 Min 6 y Max 7 de mercurio
-            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (25,27))), $dispositivo->id, 20]);
-            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (20,24))), $dispositivo->id, 24]);
-            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (6,7))), $dispositivo->id, 25]);
+            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (25,27))), $dispositivo->id, 1]);
+            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (20,24))), $dispositivo->id, 2]);
+            DB::insert('insert into medidas (tiempo, lectura, id_dispositivo, id_sensor) values (?, ?, ?, ?)', [$fecha, (strval(rand (6,7))), $dispositivo->id, 3]);
             DB::update('update dispositivos set ultima_actualizacion = ? where id = ?', [$fecha, $dispositivo->id]);
         }
         return 0;
