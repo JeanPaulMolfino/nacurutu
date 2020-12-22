@@ -220,7 +220,7 @@
                       id="input-group-3"
                       label-cols="3"
                       label-size="lg"
-                      label="Categoria del dispositivo:"
+                      label="Categoría del dispositivo:"
                       label-for="input-2"
                       style="margin-bottom: 10px"
                     >
@@ -271,7 +271,7 @@
                       id="input-group-5"
                       label-cols="3"
                       label-size="lg"
-                      label="Ubicacion del dispositivo:"
+                      label="Ubicación del dispositivo:"
                       label-for="input-5"
                       style="margin-bottom: 10px"
                     >
@@ -279,7 +279,7 @@
                         id="input-5"
                         size="lg"
                         v-model="form.ubicacion"
-                        placeholder="Ubicacion"
+                        placeholder="Ubicación"
                       ></b-form-input>
                     </b-form-group>
 
@@ -452,7 +452,7 @@
                 <b-form @submit="checkFormCategoria" @reset="onResetCategoria">
                   <b-form-group
                     id="input-group-1"
-                    label="Nombre de la categoria:"
+                    label="Nombre de la categoría:"
                     label-size="lg"
                     style="margin-bottom: 10px"
                     label-cols="2"
@@ -463,7 +463,7 @@
                       v-model="formCategoria.categoria"
                       required
                       size="lg"
-                      placeholder="Nombre categoria"
+                      placeholder="Nombre categoría"
                     ></b-form-input>
                   </b-form-group>
 
@@ -472,7 +472,7 @@
                     label-cols="2"
                     label-size="lg"
                     style="margin-bottom: 10px"
-                    label="Proposito de la categoria:"
+                    label="Propósito de la categoría:"
                     label-for="input-2"
                   >
                     <b-form-input
@@ -480,7 +480,7 @@
                       required
                       size="lg"
                       v-model="formCategoria.proposito"
-                      placeholder="Proposito"
+                      placeholder="Propósito"
                     ></b-form-input>
                   </b-form-group>
 
@@ -489,7 +489,7 @@
                     label-cols="2"
                     style="margin-bottom: 10px"
                     label-size="lg"
-                    label="Tiempo de actualziacion:"
+                    label="Tiempo de actualización:"
                     label-for="input-3"
                   >
                     <b-form-input
@@ -498,7 +498,7 @@
                       type="number"
                       required
                       size="lg"
-                      placeholder="Tiempo de actualziacion"
+                      placeholder="Tiempo de actualización"
                     ></b-form-input>
                   </b-form-group>
 
@@ -568,7 +568,7 @@
 
                   <b-form-group
                     id="input-group-1"
-                    label="Minimo:"
+                    label="Mínimo:"
                     label-for="input-3"
                     label-size="lg"
                     style="margin-bottom: 10px"
@@ -579,13 +579,13 @@
                       v-model="formSensor.min"
                       type="number"
                       size="lg"
-                      placeholder="Minimo"
+                      placeholder="Mínimo"
                     ></b-form-input>
                   </b-form-group>
 
                   <b-form-group
                     id="input-group-1"
-                    label="Maximo:"
+                    label="Máximo:"
                     label-for="input-4"
                     label-size="lg"
                     style="margin-bottom: 10px"
@@ -596,13 +596,13 @@
                       v-model="formSensor.max"
                       type="number"
                       size="lg"
-                      placeholder="Maximo"
+                      placeholder="Máximo"
                     ></b-form-input>
                   </b-form-group>
 
                   <b-form-group
                     id="input-group-7"
-                    label="Grafica:"
+                    label="Gráfica:"
                     label-for="input-7"
                     label-size="lg"
                     style="margin-bottom: 10px"
@@ -691,7 +691,7 @@
 
                   <b-form-group
                     id="input-group-1"
-                    label="Minimo:"
+                    label="Mínimo:"
                     label-for="input-3"
                     style="margin-bottom: 10px"
                     label-size="lg"
@@ -702,13 +702,13 @@
                       v-model="updateSensor.min"
                       type="number"
                       size="lg"
-                      placeholder="Minimo"
+                      placeholder="Mínimo"
                     ></b-form-input>
                   </b-form-group>
 
                   <b-form-group
                     id="input-group-1"
-                    label="Maximo:"
+                    label="Máximo:"
                     label-for="input-4"
                     style="margin-bottom: 10px"
                     label-size="lg"
@@ -719,13 +719,13 @@
                       v-model="updateSensor.max"
                       type="number"
                       size="lg"
-                      placeholder="Maximo"
+                      placeholder="Máximo"
                     ></b-form-input>
                   </b-form-group>
 
                   <b-form-group
                     id="input-group-7"
-                    label="Grafica:"
+                    label="Gráfica:"
                     label-for="input-7"
                     label-size="lg"
                     style="margin-bottom: 10px"

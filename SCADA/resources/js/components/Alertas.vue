@@ -11,8 +11,8 @@
         {{ alerta.lectura + " en " + alerta.nombre
         }}{{
           alerta.lectura >= alerta.max
-            ? " exediendo el maximo permitido."
-            : " siendo menor al minimo permitido."
+            ? " excediendo el máximo permitido."
+            : " siendo menor al mínimo permitido."
         }}
         <iframe
           src="https://s3-eu-west-1.amazonaws.com/omegasquadron.neilbryson.net/silence.mp3"

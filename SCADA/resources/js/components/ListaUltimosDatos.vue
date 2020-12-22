@@ -12,11 +12,11 @@
         {{ dispositivo.identificador }}
       </b-list-group-item>
       <b-list-group-item variant="info">
-        Categoria del dispositivo : {{ dispositivo.categoria }}
+        Categoría del dispositivo : {{ dispositivo.categoria }}
       </b-list-group-item>
 
       <b-list-group-item variant="info">
-        Ultima actualización:
+        Última actualización:
         {{ dispositivo.ultima_actualizacion }}
       </b-list-group-item>
       <b-list-group-item variant="info"
