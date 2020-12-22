@@ -15,11 +15,11 @@ export default {
         },
         dateFrom: {
             type: String,
-            default: `2000-12-31`
+            default: `null`
         },
         dateTo: {
             type: String,
-            default: `2069-12-31`
+            default: `null`
         },
         endpoint: {
             type: String,
@@ -70,14 +70,16 @@ export default {
                     datasets: [
                         {
                             label:
-                                "[" +
+
+								"[" +
                                 this.deviceIdentificator +
                                 ": " +
                                 this.sensorIdSecondary +
-                                "] " +
-                                this.dateFrom +
-                                " | " +
-                                this.dateTo,
+								"] " +
+								(this.dateFrom != 'null' ? this.dateFrom: '')+
+								(this.dateFrom != 'null' || this.dateTo != 'null' ? " | ": '')+
+								(this.dateTo != 'null' ? this.dateTo: '')
+							,
                             data: dataRet,
                             fill: false,
                             borderColor: "#2554FF",
