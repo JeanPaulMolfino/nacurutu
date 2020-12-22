@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-12-2020 a las 03:55:21
+-- Tiempo de generación: 22-12-2020 a las 04:01:35
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.4.10
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `scada`
 --
-CREATE DATABASE IF NOT EXISTS `scada` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `scada`;
 
 -- --------------------------------------------------------
 
@@ -29,7 +27,6 @@ USE `scada`;
 -- Estructura de tabla para la tabla `dispositivos`
 --
 
-DROP TABLE IF EXISTS `dispositivos`;
 CREATE TABLE `dispositivos` (
   `id` int(11) NOT NULL,
   `actividad` tinyint(1) NOT NULL,
@@ -48,9 +45,9 @@ CREATE TABLE `dispositivos` (
 --
 
 INSERT INTO `dispositivos` (`id`, `actividad`, `ubicacion`, `fecha_alta`, `fecha_baja`, `id_tipo`, `marca`, `modelo`, `ultima_actualizacion`, `identificador`) VALUES
-(1, 1, '', '2020-12-02', NULL, 1, 'Motorola', 'Vinex', '2020-12-11 11:32:01', 'EM1234'),
-(3, 1, 'asd', '2020-12-01', NULL, 1, 'asdd', 'adddd', '2020-12-11 11:32:01', 'EM12222'),
-(4, 1, 'eeeee', '2020-12-23', NULL, 1, 'qqwqw', 'wwwww', '1900-01-01 00:00:00', 'sdfsdf');
+(1, 1, 'Azotea PDA', '2020-12-02', NULL, 1, 'Temptec', 'TM-3000', '2020-12-21 21:34:01', 'TM-1'),
+(15, 1, 'Acuario PDA', '2020-12-16', NULL, 3, 'Glass', 'GSS-63', '2020-12-23 20:01:36', 'Pecera - Tropical'),
+(16, 0, 'Terrario PDA', '2020-12-06', NULL, 4, 'Terra', 'T-62', '2020-12-20 20:01:42', 'Terratio - Tortugas');
 
 -- --------------------------------------------------------
 
@@ -58,12 +55,19 @@ INSERT INTO `dispositivos` (`id`, `actividad`, `ubicacion`, `fecha_alta`, `fecha
 -- Estructura de tabla para la tabla `graficas`
 --
 
-DROP TABLE IF EXISTS `graficas`;
 CREATE TABLE `graficas` (
   `id` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `ruta` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `graficas`
+--
+
+INSERT INTO `graficas` (`id`, `nombre`, `ruta`) VALUES
+(1, 'Lineal', NULL),
+(5, 'Radar', NULL);
 
 -- --------------------------------------------------------
 
@@ -71,7 +75,6 @@ CREATE TABLE `graficas` (
 -- Estructura de tabla para la tabla `logdispositivos`
 --
 
-DROP TABLE IF EXISTS `logdispositivos`;
 CREATE TABLE `logdispositivos` (
   `id` int(11) NOT NULL,
   `id_dispositivo` int(11) NOT NULL,
@@ -84,7 +87,6 @@ CREATE TABLE `logdispositivos` (
 -- Estructura de tabla para la tabla `medidas`
 --
 
-DROP TABLE IF EXISTS `medidas`;
 CREATE TABLE `medidas` (
   `id` int(11) NOT NULL,
   `tiempo` datetime NOT NULL,
@@ -98,42 +100,51 @@ CREATE TABLE `medidas` (
 --
 
 INSERT INTO `medidas` (`id`, `tiempo`, `lectura`, `id_dispositivo`, `id_sensor`) VALUES
-(1, '2020-12-11 11:26:01', '49', 1, 1),
-(2, '2020-12-11 11:26:01', '46', 1, 2),
-(3, '2020-12-11 11:26:01', '51', 1, 3),
-(4, '2020-12-11 11:26:01', '1024.46', 1, 4),
-(5, '2020-12-11 11:26:01', '1.18', 1, 5),
-(6, '2020-12-11 11:26:01', '0.52', 1, 6),
-(7, '2020-12-11 11:26:01', '15.68', 1, 7),
-(8, '2020-12-11 11:26:01', '47', 1, 8),
-(9, '2020-12-11 11:26:01', '0.4288', 1, 9),
-(10, '2020-12-11 11:26:01', '22', 3, 1),
-(11, '2020-12-11 11:26:01', '24', 3, 2),
-(12, '2020-12-11 11:26:01', '75', 3, 3),
-(13, '2020-12-11 11:26:01', '1240.11', 3, 4),
-(14, '2020-12-11 11:26:01', '1.74', 3, 5),
-(15, '2020-12-11 11:26:01', '0.05', 3, 6),
-(16, '2020-12-11 11:26:01', '14.75', 3, 7),
-(17, '2020-12-11 11:26:01', '155', 3, 8),
-(18, '2020-12-11 11:26:01', '0.5107', 3, 9),
-(19, '2020-12-11 11:32:01', '26', 1, 1),
-(20, '2020-12-11 11:32:01', '25', 1, 2),
-(21, '2020-12-11 11:32:01', '61', 1, 3),
-(22, '2020-12-11 11:32:01', '1341.69', 1, 4),
-(23, '2020-12-11 11:32:01', '1.17', 1, 5),
-(24, '2020-12-11 11:32:01', '0.28', 1, 6),
-(25, '2020-12-11 11:32:01', '13.61', 1, 7),
-(26, '2020-12-11 11:32:01', '294', 1, 8),
-(27, '2020-12-11 11:32:01', '0.6921', 1, 9),
-(28, '2020-12-11 11:32:01', '25', 3, 1),
-(29, '2020-12-11 11:32:01', '41', 3, 2),
-(30, '2020-12-11 11:32:01', '57', 3, 3),
-(31, '2020-12-11 11:32:01', '1216.84', 3, 4),
-(32, '2020-12-11 11:32:01', '1.39', 3, 5),
-(33, '2020-12-11 11:32:01', '0.13', 3, 6),
-(34, '2020-12-11 11:32:01', '10.36', 3, 7),
-(35, '2020-12-11 11:32:01', '8', 3, 8),
-(36, '2020-12-11 11:32:01', '0.2013', 3, 9);
+(258, '2020-12-21 20:12:01', '24', 1, 1),
+(259, '2020-12-21 20:12:01', '19', 1, 2),
+(260, '2020-12-21 20:12:01', '70', 1, 3),
+(261, '2020-12-21 20:12:01', '1294.24', 1, 4),
+(262, '2020-12-21 20:12:01', '1.22', 1, 5),
+(263, '2020-12-21 20:12:01', '0.55', 1, 6),
+(264, '2020-12-21 20:12:01', '19.31', 1, 7),
+(265, '2020-12-21 20:12:01', '199', 1, 8),
+(266, '2020-12-21 20:12:01', '0.4212', 1, 9),
+(267, '2020-12-21 20:14:01', '19', 1, 1),
+(268, '2020-12-21 20:14:01', '31', 1, 2),
+(269, '2020-12-21 20:14:01', '88', 1, 3),
+(270, '2020-12-21 20:14:01', '1307.46', 1, 4),
+(271, '2020-12-21 20:14:01', '0.18', 1, 5),
+(272, '2020-12-21 20:14:01', '0.25', 1, 6),
+(273, '2020-12-21 20:14:01', '15.24', 1, 7),
+(274, '2020-12-21 20:14:01', '329', 1, 8),
+(275, '2020-12-21 20:14:01', '0.5102', 1, 9),
+(276, '2020-12-21 20:21:01', '28', 1, 1),
+(277, '2020-12-21 20:21:01', '34', 1, 2),
+(278, '2020-12-21 20:21:01', '59', 1, 3),
+(279, '2020-12-21 20:21:01', '1363.8', 1, 4),
+(280, '2020-12-21 20:21:01', '0.73', 1, 5),
+(281, '2020-12-21 20:21:01', '0.99', 1, 6),
+(282, '2020-12-21 20:21:01', '18.51', 1, 7),
+(283, '2020-12-21 20:21:01', '262', 1, 8),
+(284, '2020-12-21 20:21:01', '0.0186', 1, 9),
+(285, '2020-12-21 20:24:01', '-2', 1, 1),
+(286, '2020-12-21 20:24:01', '21', 1, 2),
+(287, '2020-12-21 20:24:01', '93', 1, 3),
+(288, '2020-12-21 20:24:01', '947.06', 1, 4),
+(289, '2020-12-21 20:24:01', '1.94', 1, 5),
+(290, '2020-12-21 20:24:01', '0.06', 1, 6),
+(291, '2020-12-21 20:24:01', '9.73', 1, 7),
+(292, '2020-12-21 20:24:01', '225', 1, 8),
+(293, '2020-12-21 20:24:01', '0.8286', 1, 9),
+(294, '2020-12-21 21:34:01', '8', 1, 1),
+(295, '2020-12-21 21:34:01', '20', 1, 2),
+(296, '2020-12-21 21:34:01', '63', 1, 3),
+(297, '2020-12-21 21:34:01', '903.96', 1, 4),
+(298, '2020-12-21 21:34:01', '0.1', 1, 5),
+(299, '2020-12-21 21:34:01', '0.36', 1, 6),
+(300, '2020-12-21 21:34:01', '7.57', 1, 7),
+(301, '2020-12-21 21:34:01', '220', 1, 8),
+(302, '2020-12-21 21:34:01', '0.465', 1, 9);
 
 -- --------------------------------------------------------
 
@@ -141,7 +152,6 @@ INSERT INTO `medidas` (`id`, `tiempo`, `lectura`, `id_dispositivo`, `id_sensor`)
 -- Estructura de tabla para la tabla `sensores`
 --
 
-DROP TABLE IF EXISTS `sensores`;
 CREATE TABLE `sensores` (
   `id` int(11) NOT NULL,
   `id_tipo` int(11) NOT NULL,
@@ -158,16 +168,21 @@ CREATE TABLE `sensores` (
 --
 
 INSERT INTO `sensores` (`id`, `id_tipo`, `id_sensor_secundario`, `unidadmedida`, `nombre`, `min`, `max`, `id_grafica`) VALUES
-(1, 1, 1, ' ºC', 'T_amb', NULL, NULL, NULL),
-(3, 1, 2, 'ºC', 'T_int', NULL, NULL, NULL),
-(5, 1, 3, '%', 'Humedad', NULL, NULL, NULL),
-(6, 1, 4, 'HPa', 'Pres_atm', NULL, NULL, NULL),
-(7, 1, 5, ' W/m^2', 'Irrad_solar', NULL, NULL, NULL),
-(8, 1, 6, 'W/m^2', 'Irrad_UV', NULL, NULL, NULL),
-(9, 1, 7, 'm/s', 'Vel_viento', NULL, NULL, NULL),
-(10, 1, 8, 'Grados, ', 'Dir_viento', NULL, NULL, NULL),
-(11, 1, 9, 'mm / m^2', 'Ind_pluvio', NULL, NULL, NULL),
-(12, 3, 1, 'ºC', 'Temperatura', NULL, NULL, NULL);
+(1, 1, 1, ' ºC', 'T_amb', NULL, NULL, 1),
+(3, 1, 2, 'ºC', 'T_int', NULL, NULL, 1),
+(5, 1, 3, '%', 'Humedad', NULL, NULL, 1),
+(6, 1, 4, 'HPa', 'Pres_atm', NULL, NULL, 1),
+(7, 1, 5, ' W/m^2', 'Irrad_solar', NULL, NULL, 1),
+(8, 1, 6, 'W/m^2', 'Irrad_UV', NULL, NULL, 1),
+(9, 1, 7, 'm/s', 'Vel_viento', NULL, NULL, 1),
+(10, 1, 8, 'Grados', 'Dir_viento', NULL, NULL, 5),
+(11, 1, 9, 'mm / m^2', 'Ind_pluvio', NULL, NULL, 1),
+(20, 3, 3, 'C°', 'Temperatura', 25, 27, 1),
+(21, 4, 7, '%', 'Nivel de agua', 30, 100, 1),
+(22, 4, 8, 'tests', 'Temperatura ambiente', 16, 24, 1),
+(23, 4, 9, '%', 'Humedad de la tierra', 10, 18, 1),
+(24, 3, 4, 'l/m^3', 'Volumen de agua', 20, 24, 1),
+(25, 3, 5, 'mg/l', 'Nivel de Oxigeno', 6, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -175,7 +190,6 @@ INSERT INTO `sensores` (`id`, `id_tipo`, `id_sensor_secundario`, `unidadmedida`,
 -- Estructura de tabla para la tabla `tipos_dispositivos`
 --
 
-DROP TABLE IF EXISTS `tipos_dispositivos`;
 CREATE TABLE `tipos_dispositivos` (
   `id` int(11) NOT NULL,
   `updatetime` int(20) NOT NULL,
@@ -189,7 +203,8 @@ CREATE TABLE `tipos_dispositivos` (
 
 INSERT INTO `tipos_dispositivos` (`id`, `updatetime`, `categoria`, `proposito`) VALUES
 (1, 1, 'Estacion metereologica', ''),
-(3, 1, '1', '1');
+(3, 1, 'Acuario', 'Control'),
+(4, 12, 'Terrario', 'Control');
 
 --
 -- Índices para tablas volcadas
@@ -245,13 +260,13 @@ ALTER TABLE `tipos_dispositivos`
 -- AUTO_INCREMENT de la tabla `dispositivos`
 --
 ALTER TABLE `dispositivos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `graficas`
 --
 ALTER TABLE `graficas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `logdispositivos`
@@ -263,19 +278,19 @@ ALTER TABLE `logdispositivos`
 -- AUTO_INCREMENT de la tabla `medidas`
 --
 ALTER TABLE `medidas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=306;
 
 --
 -- AUTO_INCREMENT de la tabla `sensores`
 --
 ALTER TABLE `sensores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_dispositivos`
 --
 ALTER TABLE `tipos_dispositivos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
