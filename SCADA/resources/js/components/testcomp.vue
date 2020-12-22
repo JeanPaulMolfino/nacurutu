@@ -864,10 +864,10 @@ export default {
           this.sensorGraphIdChart = sensor.grafica;
         }
       });
-      if(this.formGrafica.to == null || this.formGrafica.to == ""){
+      if (this.formGrafica.to == null || this.formGrafica.to == "") {
         this.formGrafica.to = "null";
       }
-      if(this.formGrafica.from == null || this.formGrafica.from == ""){
+      if (this.formGrafica.from == null || this.formGrafica.from == "") {
         this.formGrafica.from = "null";
       }
       this.displayGraph = true;
@@ -1102,6 +1102,14 @@ export default {
         const response = await fetch(this.endpointSensores + dispositivo);
         const myJson = await response.json();
         this.sensores[dispositivo] = myJson;
+        if (this.tabSeleccionada != "dispositivos") {
+          this.sensoresTabSeleccionada = this.sensores[
+            this.tabSeleccionada
+          ].map((nombreSensor, index) => {
+            return nombreSensor.nombre;
+          });
+        }
+
         this.fetchCustom();
         this.loaded = true;
       } catch (e) {
