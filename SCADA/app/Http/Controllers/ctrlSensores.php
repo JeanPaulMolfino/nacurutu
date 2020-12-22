@@ -41,7 +41,7 @@ class ctrlSensores extends Controller
 
     public function get_sensores_alerta()
     {
-        $data = json_encode(DB::select("select d.identificador, td.categoria, s.nombre ,s.min, s.max, m.lectura from sensores as s inner join medidas as m inner join dispositivos as d inner join tipos_dispositivos as td where s.id = m.id_sensor and m.id_dispositivo = d.id and td.id = d.id_tipo and m.tiempo = (select max(mm.tiempo) from medidas as mm WHERE mm.id_dispositivo = d.id) and (m.lectura > s.max or m.lectura < s.min)"), JSON_UNESCAPED_UNICODE);
+        $data = json_encode(DB::select("select d.identificador, td.categoria, s.nombre ,s.min, s.max, m.lectura from sensores as s inner join medidas as m inner join dispositivos as d inner join tipos_dispositivos as td where s.id_sensor_secundario = m.id_sensor and m.id_dispositivo = d.id and td.id = d.id_tipo and s.id_tipo = td.id and m.tiempo = (select max(mm.tiempo) from medidas as mm WHERE mm.id_dispositivo = d.id) and (m.lectura > s.max or m.lectura < s.min)"), JSON_UNESCAPED_UNICODE);
         return response($data, 200)->header('Content-Type', 'application/json');
     }
 
