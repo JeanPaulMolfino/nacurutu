@@ -2,34 +2,10 @@
   <div id="container">
     <div class="contentContainerContainer">
       <div class="contentContainer">
-        <div v-for="(alerta, index) in sensoresEnAlerta" :key="index">
-          <b-alert
-            v-model="showDismissibleAlert[alerta.identificador]"
-            variant="danger"
-            dismissible
-            style="overflow: hidden; border-radius:0;"
-          >
-            El dispositivo {{ alerta.identificador }} registró {{ alerta.lectura}} sobrepasando su umbral.
-            <iframe
-              src="https://s3-eu-west-1.amazonaws.com/omegasquadron.neilbryson.net/silence.mp3"
-              allow="autoplay"
-              id="audio"
-              style="position: absolute; z-index: -999"
-            ></iframe>
-            <audio
-              ref="player"
-              controls
-              autoplay
-              style="position: absolute; z-index: -999"
-            >
-              <source
-                src="http://soundbible.com/mp3/sms-alert-4-daniel_simon.mp3"
-              />
-              Your browser does not support the audio element.
-            </audio>
-          </b-alert>
-        </div>
-
+        <alertas
+          :sensoresEnAlerta="sensoresEnAlerta"
+          :showDismissibleAlert="showDismissibleAlert"
+        />
         <div class="nav nav-pills nav-justified">
           <div
             @click="seleccionarFruta('dispositivos')"
@@ -38,7 +14,7 @@
                 ? 'nav-item nav-link active'
                 : 'nav-item nav-link',
             ]"
-            style="border-radius: 0;"
+            style="border-radius: 0"
           >
             <p>Home</p>
           </div>
@@ -51,7 +27,7 @@
                 ? 'nav-item nav-link active'
                 : 'nav-item nav-link',
             ]"
-            style="border-radius: 0;"
+            style="border-radius: 0"
           >
             <p>
               {{ dispositivo.identificador }}
@@ -77,7 +53,6 @@
             </button>
           </div>
         </div>
-
         <div v-for="(dispositivo, index) in dispositivos" :key="index">
           <div v-if="dispositivo.identificador === tabSeleccionada">
             <div style="font-size: 16px">
@@ -140,6 +115,7 @@
                       ></b-calendar>
                     </b-form-group>
                   </div>
+
                   <div
                     class="row"
                     style="margin: 30px 0 60px 0; justify-content: center"
@@ -149,43 +125,18 @@
                     >
                   </div>
                 </b-form>
-
                 <div class="row" style="font-size: 24px; margin-bottom: 40px">
-                  <b-list-group class="descripcion float-left">
-                    <b-list-group-item
-                      :variant="dispositivo.actividad ? 'success' : 'danger'"
-                    >
-                      Actividad del dispositivo:
-                      {{ dispositivo.actividad ? "Activo" : "Inactivo" }}
-                    </b-list-group-item>
-                    <b-list-group-item variant="info">
-                      Identificador del dispositivo :
-                      {{ dispositivo.identificador }}
-                    </b-list-group-item>
-                    <b-list-group-item variant="info">
-                      Categoria del dispositivo : {{ dispositivo.categoria }}
-                    </b-list-group-item>
-
-                    <b-list-group-item variant="info">
-                      Ultima actualización:
-                      {{ dispositivo.ultima_actualizacion }}
-                    </b-list-group-item>
-                    <b-list-group-item variant="info"
-                      >Sensores:
-                      <b-list-group-item
-                        v-for="sensor in sensores[dispositivo.identificador]"
-                        :key="sensor.nombre"
-                        variant="secondary"
-                      >
-                        {{ sensor.nombre }}: {{ sensor.lectura }}
-                        {{ sensor.unidadmedida }}
-                      </b-list-group-item>
-                    </b-list-group-item>
-                  </b-list-group>
-
-                  <div class="float-right" style="width: 50vw; height: auto">
+                  <listaUltimosDatos
+                    :dispositivo="dispositivo"
+                    :sensores="sensores[dispositivo.identificador]"
+                  />
+                  <div
+                    :class="float - right"
+                    style="width: 50vw; height: auto"
+                    v-if="displayGraph"
+                  >
                     <chartchooser
-                      v-if="displayGraph"
+                      :displayGraph="displayGraph"
                       :deviceIdentificator="dispositivo.identificador"
                       :sensorIdSecondary="sensorIdSecondaryChart.toString()"
                       :sensorGraphId="sensorGraphIdChart"
@@ -204,7 +155,11 @@
               <div :class="[display === 'main' ? 'descripcion' : 'invisible']">
                 <div
                   class="row"
-                  style="justify-content: center; margin-bottom: 50px"
+                  style="
+                    justify-content: center;
+                    margin-bottom: 50px;
+                    margin-top: 50px;
+                  "
                 >
                   <b-button
                     @click="makeDisplay('formulario')"
@@ -226,43 +181,11 @@
                   </b-button>
                 </div>
 
-                <div :class="[display === 'main' ? 'row' : 'invisible']">
-                  <div
-                    v-for="(dispositivo, index) in dispositivos"
-                    :key="index"
-                    class="col-md-3 col-6 my-1"
-                  >
-                    <div class="card h-100">
-                      <div class="card-body" style="text-align: center">
-                        <div class="card-title">
-                          {{ dispositivo.identificador }}
-                          <button
-                            @click="anadirTab(dispositivo)"
-                            class="addBtn"
-                          >
-                            <svg
-                              width="1em"
-                              height="1em"
-                              viewBox="0 0 16 16"
-                              class="bi bi-plus-circle-fill"
-                              fill="currentColor"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                        <div>
-                          <span class="badge badge-pill badge-info">{{
-                            dispositivo.categoria
-                          }}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div :class="[display === 'main' ? '' : 'invisible']">
+                  <listDispositivos
+                    :dispositivos="dispositivos"
+                    :anadirTab="anadirTab"
+                  />
                 </div>
               </div>
 
@@ -273,7 +196,7 @@
               >
                 <div
                   :class="[display === 'formulario' ? '' : 'invisible']"
-                  style="padding: 0 40px"
+                  style="padding: 30px 40px"
                 >
                   <b-form @submit="checkForm" @reset="onReset">
                     <b-form-group
@@ -483,7 +406,12 @@
                             </b-button>
                           </div>
                           <b-button
-                            @click="makeDisplayFormularioSensores(categoria.id)"
+                            @click="
+                              makeDisplayFormularioSensores(
+                                categoria.id,
+                                categoria.categoria
+                              )
+                            "
                             variant="outline-primary"
                             block
                           >
@@ -498,7 +426,7 @@
 
               <div
                 class="row"
-                style="justify-content: center; margin-top: 30px"
+                style="justify-content: center; margin: 30px 0 30px 0"
               >
                 <b-button
                   @click="makeDisplay('nuevaCategoria')"
@@ -600,8 +528,8 @@
                 :class="[display === 'formularioSensores' ? '' : 'invisible']"
                 style="padding: 0 40px"
               >
-                <h1 style="margin-bottom: 15px; overflow-y: hidden;">
-                  La categoria es: {{ formSensor.idCategoria }}
+                <h1 style="margin-bottom: 15px; overflow-y: hidden">
+                  La categoria es: {{ formSensor.nombreCategoria }}
                 </h1>
                 <b-form @submit="checkFormSensor" @reset="onResetSensor">
                   <b-form-group
@@ -796,20 +724,20 @@
                   </b-form-group>
 
                   <b-form-group
-                    id="input-group-1"
+                    id="input-group-7"
                     label="Grafica:"
-                    label-for="input-5"
-                    style="margin-bottom: 10px"
+                    label-for="input-7"
                     label-size="lg"
+                    style="margin-bottom: 10px"
                     label-cols="3"
                   >
-                    <b-form-input
-                      id="input-5"
-                      v-model="updateSensor.id_grafica"
-                      required
+                    <b-form-select
+                      id="input-2"
                       size="lg"
-                      placeholder="Grafica"
-                    ></b-form-input>
+                      v-model="updateSensor.grafica"
+                      :options="tiposDeGraficasNombre"
+                      required
+                    ></b-form-select>
                   </b-form-group>
 
                   <div
@@ -841,12 +769,18 @@
 
 <script>
 import chartchooser from "./ChartChooser";
+import alertas from "./Alertas";
+import listaUltimosDatos from "./ListaUltimosDatos";
+import listDispositivos from "./ListDispositivos";
 
 export default {
   expand: false,
   props: {},
   components: {
     chartchooser,
+    alertas,
+    listaUltimosDatos,
+    listDispositivos,
   },
   data() {
     return {
@@ -885,6 +819,7 @@ export default {
         updatetime: "",
       },
       formSensor: {
+        nombreCategoria: "",
         idCategoria: "",
         unidadmedida: "",
         grafica: "",
@@ -896,6 +831,7 @@ export default {
         idCategoria: "",
         id: "",
         id_sensor_secundario: "",
+        grafica: "",
         id_grafica: "",
         max: "",
         min: "",
@@ -921,13 +857,13 @@ export default {
   methods: {
     displayGrafica(e) {
       e.preventDefault();
+      this.displayGraph = false;
       this.sensores[this.tabSeleccionada].map((sensor, index) => {
         if (sensor.nombre == this.formGrafica.sensor) {
           this.sensorIdSecondaryChart = sensor.secundario;
           this.sensorGraphIdChart = sensor.grafica;
         }
       });
-
       this.displayGraph = true;
     },
     idCategoriaToggle(id) {
@@ -979,15 +915,22 @@ export default {
     makeDisplay(newDisplay) {
       this.display = newDisplay;
     },
-    makeDisplayFormularioSensores(idCategoria) {
+    makeDisplayFormularioSensores(idCategoria, nombreCategoria) {
       this.formSensor.idCategoria = idCategoria;
+      this.formSensor.nombreCategoria = nombreCategoria;
       this.display = "formularioSensores";
     },
     makeDisplayEditarSensor(idCategoria, sensor) {
       this.updateSensor.id = sensor.id;
+      this.updateSensor.id_grafica = sensor.id_grafica;
+      this.updateSensor.nombreOriginal = sensor.nombre;
       this.updateSensor.id_sensor_secundario = sensor.id_sensor_secundario;
       this.updateSensor.idCategoria = idCategoria;
-      this.updateSensor.id_grafica = sensor.id_grafica;
+      this.tiposDeGraficas.map((grafica) => {
+        if (grafica.id === this.updateSensor.id_grafica) {
+          this.updateSensor.grafica = grafica.nombre;
+        }
+      });
       this.updateSensor.max = sensor.max;
       this.updateSensor.min = sensor.min;
       this.updateSensor.nombre = sensor.nombre;
@@ -1067,10 +1010,10 @@ export default {
       });
       var aux = "1";
       this.tiposDeGraficas.map((grafica) => {
-          if (grafica.nombre === this.formSensor.grafica) {
-            aux = grafica.id.toString();
-          }
-        });
+        if (grafica.nombre === this.formSensor.grafica) {
+          aux = grafica.id.toString();
+        }
+      });
       if (!errorNombre) {
         this.sendSensor(aux);
         this.makeDisplay("listCategorias");
@@ -1084,8 +1027,16 @@ export default {
       e.preventDefault();
       let errorNombre = false;
       this.sensoresCategoria[this.updateSensor.idCategoria].map((sensor) => {
-        if (sensor.nombre === this.updateSensor.nombre) {
+        if (
+          sensor.nombre === this.updateSensor.nombre &&
+          this.updateSensor.nombre != this.updateSensor.nombreOriginal
+        ) {
           errorNombre = true;
+        }
+      });
+      this.tiposDeGraficas.map((grafica) => {
+        if (grafica.nombre === this.updateSensor.grafica) {
+          this.updateSensor.id_grafica = grafica.id.toString();
         }
       });
       if (!errorNombre) {
@@ -1145,6 +1096,7 @@ export default {
         const response = await fetch(this.endpointSensores + dispositivo);
         const myJson = await response.json();
         this.sensores[dispositivo] = myJson;
+        this.fetchCustom();
         this.loaded = true;
       } catch (e) {
         console.error("catched! " + e);
@@ -1235,10 +1187,10 @@ export default {
       return this.formSensor.max != "" ? this.formSensor.max : "null";
     },
     getSensorUpdateMin() {
-      return this.formSensor.min != "" ? this.formSensor.min : "null";
+      return this.updateSensor.min != "" ? this.updateSensor.min : "null";
     },
     getSensorUpdateMax() {
-      return this.formSensor.max != "" ? this.formSensor.max : "null";
+      return this.updateSensor.max != "" ? this.updateSensor.max : "null";
     },
     async sendSensor(graphId) {
       this.loaded = false;
@@ -1308,6 +1260,7 @@ export default {
         console.log("Sensor updapeado... supuestamente");
         this.fetchSensoresPorCategoria(this.updateSensor.idCategoria);
         this.fetchCategorias();
+        this.fetchCustom();
         this.loaded = true;
       } catch (e) {
         console.error("catched! " + e);
@@ -1443,44 +1396,8 @@ export default {
   border: none;
 }
 
-.tabContainer {
-  display: flex;
-  flex-direction: row;
-  height: 3em;
-}
-
-.activeTab {
-  background-color: #0d8af0;
-  color: #1b3447;
-  position: relative;
-  top: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  transition: all 0.3s ease;
-  font-size: 1.2em;
-  font-weight: 700;
-  cursor: pointer;
-  justify-content: center;
-  text-transform: uppercase;
-  border: none;
-}
-
-.descripcion {
-  padding: 2em 3em;
-  font-size: 0.9em;
-}
-
 .tab:hover {
   color: black;
-}
-
-.frutaImg {
-  height: 20vw;
-  float: left;
-  margin: 1em 1em 0.5em 0;
 }
 
 .frutasDesechadas {
@@ -1488,33 +1405,13 @@ export default {
   padding: 0.5vw 2vw;
 }
 
-.desechadasContainer {
-  border-style: solid;
-  border-radius: 36px 0 0 36px;
-  border-color: black;
-  border-width: 3px;
-  width: 15vw;
-  font-size: 2vw;
-  background-color: #98aab7;
-  display: flex;
-  flex-direction: column;
-  align-self: flex-start;
-  height: 100vh;
-  min-height: 500px;
-}
-
 .contentContainerContainer {
   width: 100vw;
   height: 100vh;
-  /** background-color: #5d7f9e; **/
 }
 
 .contentContainer {
   font-size: 2vw;
-}
-
-.title {
-  text-align: center;
 }
 
 .addBtn {
@@ -1536,6 +1433,10 @@ export default {
   position: absolute;
   right: 0;
   top: -10px;
+}
+
+.descripcion {
+  padding: 20px 45px;
 }
 
 .invisible {
