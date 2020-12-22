@@ -864,6 +864,12 @@ export default {
           this.sensorGraphIdChart = sensor.grafica;
         }
       });
+      if(this.formGrafica.to == null || this.formGrafica.to == ""){
+        this.formGrafica.to = "null";
+      }
+      if(this.formGrafica.from == null || this.formGrafica.from == ""){
+        this.formGrafica.from = "null";
+      }
       this.displayGraph = true;
     },
     idCategoriaToggle(id) {
